@@ -1,19 +1,28 @@
 plugins {
-    id 'java'
+    id 'java' // Java 플러그인 추가 (Java 프로젝트로 인식)
+    id 'org.springframework.boot' version '3.3.4' // Spring Boot 플러그인 추가
+    id 'io.spring.dependency-management' version '1.1.6' // Spring 의존성 관리 플러그인
 }
 
-group 'com.example'
-version '1.0-SNAPSHOT'
+group 'com.whalewatch'
+version '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 repositories {
-    mavenCentral()
+    mavenCentral() // Maven Central에서 의존성 다운로드
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.springframework.boot:spring-boot-starter' // Spring Boot 핵심 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test' // 테스트용 라이브러리
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform() //JUnit 테스트 플랫폼 사용
 }
