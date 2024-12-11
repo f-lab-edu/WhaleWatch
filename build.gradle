@@ -1,19 +1,28 @@
 plugins {
-    id 'java'
+    id 'java' // Java 플러그인 추가 (Java 프로젝트로 인식)
 }
 
-group 'com.example'
-version '1.0-SNAPSHOT'
+group 'com.whalewatch'
+version '0.0.1-SNAPSHOT'
 
-repositories {
-    mavenCentral()
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+subprojects {
+    // 모든 서브프로젝트에 공통 적용할 설정
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral() // Maven Central에서 의존성 다운로드
+    }
+
+
+    test {
+        useJUnitPlatform() //JUnit 테스트 플랫폼 사용
+    }
 }
 
-test {
-    useJUnitPlatform()
-}
+

@@ -1,9 +1,15 @@
+### Gradle ###
 .gradle/
 /build/
+
+### 로그 ###
 *.log
+
+### MacOS ###
 .DS_Store
+
+### IntelliJ IDEA ###
 *.iml
 out/
+.idea/
 
-### YML ###
-*.yml
