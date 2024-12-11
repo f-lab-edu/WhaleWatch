@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.whalewatch.controller.AlertControllerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2024-12-11T11:19:20" hostname="hongjunmoui-MacBookPro.local" time="0.534">
+  <properties/>
+  <testcase name="updateAlertSettings()" classname="com.whalewatch.controller.AlertControllerTest" time="0.515"/>
+  <testcase name="getAlertSettings()" classname="com.whalewatch.controller.AlertControllerTest" time="0.017"/>
+  <system-out><![CDATA[20:19:20.171 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.whalewatch.controller.AlertControllerTest]: AlertControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:19:20.240 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.whalewatch.WhaleWatchApplication for test class com.whalewatch.controller.AlertControllerTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2024-12-11T20:19:20.397+09:00  INFO 71176 --- [    Test worker] c.w.controller.AlertControllerTest       : Starting AlertControllerTest using Java 17.0.9 with PID 71176 (started by junmo in /Users/junmo/Desktop/study/project/WhaleWatch/api)
+2024-12-11T20:19:20.397+09:00  INFO 71176 --- [    Test worker] c.w.controller.AlertControllerTest       : No active profile set, falling back to 1 default profile: "default"
+2024-12-11T20:19:20.746+09:00  INFO 71176 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-12-11T20:19:20.746+09:00  INFO 71176 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-12-11T20:19:20.747+09:00  INFO 71176 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2024-12-11T20:19:20.762+09:00  INFO 71176 --- [    Test worker] c.w.controller.AlertControllerTest       : Started AlertControllerTest in 0.484 seconds (process running for 1.048)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
