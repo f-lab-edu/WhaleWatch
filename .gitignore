@@ -1,6 +1,6 @@
 ### Gradle ###
 .gradle/
-/build/
+**/build/
 
 ### 로그 ###
 *.log
