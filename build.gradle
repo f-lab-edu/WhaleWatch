@@ -13,16 +13,18 @@ java {
     }
 }
 
-repositories {
-    mavenCentral() // Maven Central에서 의존성 다운로드
+subprojects {
+    // 모든 서브프로젝트에 공통 적용할 설정
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral() // Maven Central에서 의존성 다운로드
+    }
+
+
+    test {
+        useJUnitPlatform() //JUnit 테스트 플랫폼 사용
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter' // Spring Boot 핵심 라이브러리
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test' // 테스트용 라이브러리
-}
 
-test {
-    useJUnitPlatform() //JUnit 테스트 플랫폼 사용
-}
