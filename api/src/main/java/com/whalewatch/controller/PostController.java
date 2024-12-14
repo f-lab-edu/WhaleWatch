@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
-public class CommunityController {
+public class PostController {
 
     @GetMapping
     public List<PostDto> getPosts(){
