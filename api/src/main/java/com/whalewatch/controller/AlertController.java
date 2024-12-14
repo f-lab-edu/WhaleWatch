@@ -14,17 +14,24 @@ public class AlertController {
 
     public AlertController(){
         //초기 더미데이터
-        alertsettings.add(new AlertSettingsDto("BTC",10000,true));
-        alertsettings.add(new AlertSettingsDto("ETH",5000,false));
+        alertsettings.add(new AlertSettingsDto(1,"BTC",10000,true));
+        alertsettings.add(new AlertSettingsDto(2,"ETH",5000,false));
     }
 
-    @GetMapping("/settings")
-    public List<AlertSettingsDto> getAlertSettings() {
+    @GetMapping()
+    public List<AlertSettingsDto> getAlert() {
         return alertsettings;
     }
 
-    @PutMapping("/settings")
-    public AlertSettingsDto updateAlertSetings(@RequestBody AlertSettingsDto settings){
+    //알림 생성
+    @PutMapping()
+    public AlertSettingsDto createAlert(@PathVariable int id, @RequestBody AlertSettingsDto settings){
+        alertsettings.add(settings);
+        return settings;
+    }
+
+    @PostMapping("/{id}")
+    public AlertSettingsDto updateAlert(@PathVariable int id,@RequestBody AlertSettingsDto settings){
         alertsettings.add(settings);
         return settings;
     }
