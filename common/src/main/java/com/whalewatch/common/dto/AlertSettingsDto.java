@@ -13,6 +13,18 @@ public class AlertSettingsDto {
         this.notifyByEmail = notifyByEmail;
     }
 
+    public void setCoin(String coin) {
+        this.coin = coin;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
+    }
+
+    public void setNotifyByEmail(boolean notifyByEmail) {
+        this.notifyByEmail = notifyByEmail;
+    }
+
     public String getCoin() { return coin; }
     public int getThreshold() { return threshold; }
     public boolean isNotifyByEmail() { return notifyByEmail; }
