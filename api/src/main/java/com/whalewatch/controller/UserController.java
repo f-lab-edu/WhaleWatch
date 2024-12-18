@@ -1,6 +1,6 @@
 package com.whalewatch.controller;
 
-import com.whalewatch.common.dto.UserDto;
+import com.whalewatch.dto.UserDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -1,6 +1,6 @@
 package com.whalewatch.controller;
 
-import com.whalewatch.common.dto.PostDto;
+import com.whalewatch.dto.PostDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
