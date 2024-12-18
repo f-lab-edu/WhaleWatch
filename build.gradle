@@ -1,5 +1,7 @@
 plugins {
     id 'java' // Java 플러그인 추가 (Java 프로젝트로 인식)
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group 'com.whalewatch'
@@ -23,6 +25,11 @@ subprojects {
     test {
         useJUnitPlatform() //JUnit 테스트 플랫폼 사용
     }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 
