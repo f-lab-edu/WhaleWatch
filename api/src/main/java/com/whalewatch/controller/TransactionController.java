@@ -2,6 +2,7 @@ package com.whalewatch.controller;
 
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.common.dto.TransactionDto;
+import com.whalewatch.mapper.TransactionMapper;
 import com.whalewatch.service.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,21 +17,23 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final TransactionMapper transactionMapper;
 
-    public TransactionController(TransactionService transactionService) {
+    public TransactionController(TransactionService transactionService, TransactionMapper transactionMapper) {
         this.transactionService = transactionService;
+        this.transactionMapper = transactionMapper;
     }
 
     @GetMapping("/list")
     public List<TransactionDto> getTransactions(){
-        List<Transaction> list = transactionService.getAllTransactions();
-        return list.stream().map(t-> new TransactionDto(t.getId(), t.getHash(), t.getCoin(), t.getAmount()))
+        return transactionService.getAllTransactions().stream()
+                .map(transactionMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public TransactionDto getTransactionByID(@PathVariable int id){
         Transaction trans = transactionService.getTransactionById(id);
-        return new TransactionDto(trans.getId(), trans.getHash(), trans.getCoin(), trans.getAmount());
+        return transactionMapper.toDto(trans);
     }
 }
