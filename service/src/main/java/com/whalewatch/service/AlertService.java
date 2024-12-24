@@ -12,10 +12,6 @@ public class AlertService {
 
     public AlertService(AlertRepository alertRepository) {
         this.alertRepository = alertRepository;
-
-        //더미데이터
-        alertRepository.save(new AlertSetting("BTC", 10000, true));
-        alertRepository.save(new AlertSetting("ETH", 15000, false));
     }
 
     public List<AlertSetting> getAllAlerts(){

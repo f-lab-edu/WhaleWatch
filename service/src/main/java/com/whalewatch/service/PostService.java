@@ -13,10 +13,6 @@ public class PostService {
 
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
-
-        //더미데이터
-        postRepository.save(new Post("Test1","Test1"));
-        postRepository.save(new Post("Test2","Test2"));
     }
 
     public List<Post> getAllPosts() {
