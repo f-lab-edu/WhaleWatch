@@ -1,4 +1,4 @@
-package com.whalewatch.common.dto;
+package com.whalewatch.dto;
 
 public class TransactionDto {
     private int id;

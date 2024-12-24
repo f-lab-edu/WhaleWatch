@@ -1,7 +1,7 @@
 package com.whalewatch.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.whalewatch.common.dto.AlertSettingsDto;
+import com.whalewatch.dto.AlertSettingsDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

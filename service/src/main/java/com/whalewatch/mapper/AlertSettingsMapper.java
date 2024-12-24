@@ -1,6 +1,6 @@
 package com.whalewatch.mapper;
 
-import com.whalewatch.common.dto.AlertSettingsDto;
+import com.whalewatch.dto.AlertSettingsDto;
 import com.whalewatch.domain.AlertSetting;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

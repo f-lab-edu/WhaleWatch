@@ -1,6 +1,6 @@
 package com.whalewatch.mapper;
 
-import com.whalewatch.common.dto.TransactionDto;
+import com.whalewatch.dto.TransactionDto;
 import com.whalewatch.domain.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

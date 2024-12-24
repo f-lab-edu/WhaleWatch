@@ -1,6 +1,6 @@
 package com.whalewatch.mapper;
 
-import com.whalewatch.common.dto.PostDto;
+import com.whalewatch.dto.PostDto;
 import com.whalewatch.domain.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

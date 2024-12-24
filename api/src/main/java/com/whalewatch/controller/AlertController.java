@@ -1,7 +1,7 @@
 package com.whalewatch.controller;
 
 import com.whalewatch.domain.AlertSetting;
-import com.whalewatch.common.dto.AlertSettingsDto;
+import com.whalewatch.dto.AlertSettingsDto;
 import com.whalewatch.mapper.AlertSettingsMapper;
 import com.whalewatch.service.AlertService;
 import org.springframework.web.bind.annotation.*;

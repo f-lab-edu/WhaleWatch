@@ -1,6 +1,6 @@
 package com.whalewatch.mapper;
 
-import com.whalewatch.common.dto.UserDto;
+import com.whalewatch.dto.UserDto;
 import com.whalewatch.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
