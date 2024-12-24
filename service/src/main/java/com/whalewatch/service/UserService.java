@@ -17,9 +17,8 @@ public class UserService {
     }
 
     public User loginUser(String email) {
-        return userRepository.findAll().stream()
-                .filter(u -> u.getEmail().equals(email))
-                .findFirst().orElseThrow(() -> new RuntimeException("Not found"));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public User getUserInfo(int id) {
