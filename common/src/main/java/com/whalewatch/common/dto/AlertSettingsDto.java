@@ -1,4 +1,4 @@
-package com.whalewatch.dto;
+package com.whalewatch.common.dto;
 
 public class AlertSettingsDto {
     private int id;

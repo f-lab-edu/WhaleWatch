@@ -1,11 +1,10 @@
 package com.whalewatch.controller;
 
 import com.whalewatch.domain.AlertSetting;
-import com.whalewatch.dto.AlertSettingsDto;
+import com.whalewatch.common.dto.AlertSettingsDto;
 import com.whalewatch.service.AlertService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,7 +1,7 @@
 package com.whalewatch.controller;
 
 import com.whalewatch.domain.User;
-import com.whalewatch.dto.UserDto;
+import com.whalewatch.common.dto.UserDto;
 import com.whalewatch.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
