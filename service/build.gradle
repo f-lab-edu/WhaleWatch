@@ -1,11 +1,13 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'io.spring.dependency-management'
 }
 dependencies {
     // common 모듈(Mapper에서 DTO 참조)
     implementation project(':common')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     //JPA + DB
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
