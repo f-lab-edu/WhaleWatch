@@ -2,6 +2,7 @@ package com.whalewatch.controller;
 
 import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.common.dto.AlertSettingsDto;
+import com.whalewatch.mapper.AlertSettingsMapper;
 import com.whalewatch.service.AlertService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,32 +13,32 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/alerts")
 public class AlertController {
     private final AlertService alertService;
+    private final AlertSettingsMapper alertSettingsMapper;
 
-    public AlertController(AlertService alertService) {
+    public AlertController(AlertService alertService, AlertSettingsMapper alertSettingsMapper) {
         this.alertService = alertService;
+        this.alertSettingsMapper = alertSettingsMapper;
     }
 
     @GetMapping()
     public List<AlertSettingsDto> getAlert() {
-        List<AlertSetting> alerts = alertService.getAllAlerts();
-        return alerts.stream()
-                .map(a -> new AlertSettingsDto(a.getId(),a.getCoin(),a.getThreshold(),a.isNotifyByEmail()))
+        return alertService.getAllAlerts().stream()
+                .map(alertSettingsMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     //알림 생성
     @PutMapping()
-    public AlertSettingsDto createAlert(@PathVariable int id, @RequestBody AlertSettingsDto settings){
-        AlertSetting newAlert = new AlertSetting(settings.getCoin(), settings.getThreshold(), settings.isNotifyByEmail());
-        AlertSetting saved = alertService.createAlert(newAlert);
-
-        return new AlertSettingsDto(saved.getId(), saved.getCoin(), saved.getThreshold(), saved.isNotifyByEmail());
+    public AlertSettingsDto createAlert(@RequestBody AlertSettingsDto settings){
+        AlertSetting entity = alertSettingsMapper.toEntity(settings); //Dto -> entity
+        AlertSetting saved = alertService.createAlert(entity);
+        return alertSettingsMapper.toDto(saved); //entity -> dto
     }
 
     @PostMapping("/{id}")
     public AlertSettingsDto updateAlert(@PathVariable int id,@RequestBody AlertSettingsDto settings){
-        AlertSetting toUpdate = new AlertSetting(settings.getCoin(), settings.getThreshold(), settings.isNotifyByEmail());
-        AlertSetting updated = alertService.updateAlert(id, toUpdate);
-        return new AlertSettingsDto(updated.getId(), updated.getCoin(), updated.getThreshold(), updated.isNotifyByEmail());
+        AlertSetting entity = alertSettingsMapper.toEntity(settings);
+        AlertSetting updated = alertService.updateAlert(id,entity);
+        return alertSettingsMapper.toDto(updated);
     }
 }
