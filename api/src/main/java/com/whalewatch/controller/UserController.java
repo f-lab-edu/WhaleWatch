@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping("/login")
     public UserDto loginUser(@RequestBody UserDto userDto) {
-        User user = userService.loginUser(userDto.getEmail());
+        User user = userService.loginUser(userDto.getEmail(),userDto.getPassword());
 
         if (!user.getPassword().equals(userDto.getPassword())){
             throw new RuntimeException("Invalid password");
