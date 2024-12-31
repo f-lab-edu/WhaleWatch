@@ -2,14 +2,20 @@ package com.whalewatch.service;
 
 import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.repository.AlertRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest
-public class AlertServiceTest {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
+
+@ExtendWith(SpringExtension.class)
+class AlertServiceTest {
 
     @Mock
     private AlertRepository alertRepository;
@@ -17,87 +23,72 @@ public class AlertServiceTest {
     @InjectMocks
     private AlertService alertService;
 
-    private AlertSetting alert1;
-    private AlertSetting alert2;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        alert1 = new AlertSetting();
-        alert1.setId(1);
-        alert1.setCoin("BTC");
-        alert1.setThreshold(20000);
-        alert1.setNotifyByEmail(true);
-
-        alert2 = new AlertSetting();
-        alert2.setId(2);
-        alert2.setCoin("ETH");
-        alert2.setThreshold(15000);
-        alert2.setNotifyByEmail(false);
-    }
-
     @Test
-    public void testGetAllAlerts() {
-        // Arrange
-        when(alertRepository.findAll()).thenReturn(Arrays.asList(alert1, alert2));
+    void getAllAlerts() {
+        // given
+        AlertSetting a1 = new AlertSetting("BTC", 30000, true);
+        AlertSetting a2 = new AlertSetting("ETH", 2000, false);
 
-        // Act
+        given(alertRepository.findAll()).willReturn(Arrays.asList(a1, a2));
+
+        // when
         List<AlertSetting> alerts = alertService.getAllAlerts();
 
-        // Assert
-        assertNotNull(alerts);
-        assertEquals(2, alerts.size());
-        verify(alertRepository, times(1)).findAll();
+        // then
+        assertEquals(2, alerts.size()); // 리스트 크기 검증
+
+        // 첫 번째 객체 검증
+        assertEquals("BTC", alerts.get(0).getCoin());
+        assertEquals(30000, alerts.get(0).getThreshold());
+        assertTrue(alerts.get(0).isNotifyByEmail());
+
+        // 두 번째 객체 검증
+        assertEquals("ETH", alerts.get(1).getCoin());
+        assertEquals(2000, alerts.get(1).getThreshold());
+        assertFalse(alerts.get(1).isNotifyByEmail());
     }
 
     @Test
-    public void testCreateAlert() {
-        // Arrange
-        when(alertRepository.save(any(AlertSetting.class))).thenReturn(alert1);
+    void createAlert() {
+        // given
+        AlertSetting input = new AlertSetting("BTC", 30000, true);
+        AlertSetting saved = new AlertSetting("BTC", 30000, true);
 
-        // Act
-        AlertSetting createdAlert = alertService.createAlert(alert1);
+        given(alertRepository.save(input)).willReturn(saved);
 
-        // Assert
-        assertNotNull(createdAlert);
-        assertEquals("BTC", createdAlert.getCoin());
-        verify(alertRepository, times(1)).save(alert1);
-    }
+        // when
+        AlertSetting result = alertService.createAlert(input);
 
-    @Test
-    public void testUpdateAlert_Success() {
-        // Arrange
-        AlertSetting updatedAlert = new AlertSetting();
-        updatedAlert.setCoin("BTC");
-        updatedAlert.setThreshold(25000);
-        updatedAlert.setNotifyByEmail(false);
-
-        when(alertRepository.findById(1)).thenReturn(Optional.of(alert1));
-        when(alertRepository.save(any(AlertSetting.class))).thenReturn(updatedAlert);
-
-        // Act
-        AlertSetting result = alertService.updateAlert(1, updatedAlert);
-
-        // Assert
+        // then
         assertNotNull(result);
-        assertEquals(25000, result.getThreshold());
-        assertFalse(result.isNotifyByEmail());
-        verify(alertRepository, times(1)).findById(1);
-        verify(alertRepository, times(1)).save(alert1);
+        assertEquals("BTC", result.getCoin());
+        assertEquals(30000, result.getThreshold());
+        assertTrue(result.isNotifyByEmail());
     }
 
     @Test
-    public void testUpdateAlert_NotFound() {
-        // Arrange
-        AlertSetting updatedAlert = new AlertSetting();
-        when(alertRepository.findById(3)).thenReturn(Optional.empty());
+    void updateAlert() {
+        // given
+        int alertId = 1;
+        AlertSetting existing = new AlertSetting("BTC", 10000, false);
+        given(alertRepository.findById(alertId)).willReturn(Optional.of(existing));
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            alertService.updateAlert(3, updatedAlert);
+        AlertSetting updated = new AlertSetting("ETH", 2000, true);
+        given(alertRepository.save(existing)).willAnswer(invocation -> {
+            AlertSetting toUpdate = invocation.getArgument(0);
+            toUpdate.setCoin(updated.getCoin());
+            toUpdate.setThreshold(updated.getThreshold());
+            toUpdate.setNotifyByEmail(updated.isNotifyByEmail());
+            return toUpdate;
         });
-        assertEquals("Not found", exception.getMessage());
-        verify(alertRepository, times(1)).findById(3);
-        verify(alertRepository, times(0)).save(any(AlertSetting.class));
+
+        // when
+        AlertSetting result = alertService.updateAlert(alertId, updated);
+
+        // then
+        assertEquals("ETH", result.getCoin()); // 업데이트된 코인 이름 검증
+        assertEquals(2000, result.getThreshold()); // 업데이트된 임계값 검증
+        assertTrue(result.isNotifyByEmail()); // 업데이트된 이메일 알림 여부 검증
     }
+
 }
