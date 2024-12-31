@@ -2,6 +2,7 @@ package com.whalewatch.controller;
 
 import com.whalewatch.domain.Post;
 import com.whalewatch.dto.PostDto;
+import com.whalewatch.mapper.PostMapper;
 import com.whalewatch.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,30 +13,31 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/posts")
 public class PostController {
     private final PostService postService;
+    private final PostMapper postMapper;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService,PostMapper postMapper) {
         this.postService = postService;
+        this.postMapper = postMapper;
     }
 
     @GetMapping
     public List<PostDto> getPosts(){
-        List<Post> posts = postService.getAllPosts();
-        return posts.stream()
-                .map(p -> new PostDto(p.getId(), p.getTitle(), p.getContent()))
+        return postService.getAllPosts().stream()
+                .map(postMapper::toDto) //entity -> dto
                 .collect(Collectors.toList());
     }
 
     @PostMapping
     public PostDto createPost(@RequestBody PostDto post) {
-        Post newPost = new Post(post.getTitle(), post.getContent());
-        Post saved = postService.createPost(newPost);
-        return new PostDto(saved.getId(), saved.getTitle(), saved.getContent());
+        Post entity = postMapper.toEntity(post); // Dto -> entity
+        Post saved = postService.createPost(entity);
+        return postMapper.toDto(saved);
     }
 
     @PostMapping("/{id}")
     public PostDto updatePost(@PathVariable int id, @RequestBody PostDto post) {
-        Post toUpdate = new Post(post.getTitle(), post.getContent());
-        Post updated = postService.updatePost(id, toUpdate);
-        return new PostDto(updated.getId(), updated.getTitle(), updated.getContent());
+        Post entity = postMapper.toEntity(post);
+        Post updated = postService.updatePost(id,entity);
+        return postMapper.toDto(entity);
     }
 }

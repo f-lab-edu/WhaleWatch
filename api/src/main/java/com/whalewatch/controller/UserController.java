@@ -2,6 +2,7 @@ package com.whalewatch.controller;
 
 import com.whalewatch.domain.User;
 import com.whalewatch.dto.UserDto;
+import com.whalewatch.mapper.UserMapper;
 import com.whalewatch.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,27 +10,34 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping
     public UserDto registerUser(@RequestBody UserDto userDto) {
-        User newUser = new User(userDto.getEmail(), userDto.getUsername());
-        User saved = userService.registerUser(newUser);
-        return new UserDto(saved.getId(), saved.getEmail(), saved.getUsername());
+        User entity = userMapper.toEntity(userDto);
+        User saved = userService.registerUser(entity);
+        return userMapper.toDto(saved);
     }
 
     @PostMapping("/login")
     public UserDto loginUser(@RequestBody UserDto userDto) {
         User user = userService.loginUser(userDto.getEmail());
-        return new UserDto(user.getId(), user.getEmail(), user.getUsername());
+
+        if (!user.getPassword().equals(userDto.getPassword())){
+            throw new RuntimeException("Invalid password");
+        }
+
+        return userMapper.toDto(user);
     }
 
     @GetMapping("{id}")
     public UserDto getUserInfo(@PathVariable int id) {
         User user = userService.getUserInfo(id);
-        return new UserDto(user.getId(), user.getEmail(), user.getUsername());
+        return userMapper.toDto(user);
     }
 }

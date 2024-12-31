@@ -15,6 +15,10 @@ public class AlertSettingsDto {
         this.notifyByEmail = notifyByEmail;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
