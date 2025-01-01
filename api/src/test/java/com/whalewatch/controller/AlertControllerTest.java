@@ -35,14 +35,14 @@ class AlertControllerTest {
     @BeforeEach
     void setup() {
         alertRepository.deleteAll();
+
+        alertRepository.save(new AlertSetting("BTC", 30000, true));
     }
 
     @Test
     @DisplayName("GET /api/alerts")
     void testGetAlerts() throws Exception {
         // given
-        AlertSetting a1 = new AlertSetting("BTC", 30000, true);
-        alertRepository.save(a1);
 
         // when & then
         mockMvc.perform(get("/api/alerts"))
@@ -69,8 +69,8 @@ class AlertControllerTest {
 
         // then - DB 확인
         List<AlertSetting> all = alertRepository.findAll();
-        assertEquals(1, all.size());
-        AlertSetting savedAlert = all.get(0); // 저장된 객체 가져오기
+        assertEquals(2, all.size());
+        AlertSetting savedAlert = all.get(1); // 저장된 객체 가져오기
         assertEquals("ETH", savedAlert.getCoin()); // coin 값 검증
         assertEquals(2000, savedAlert.getThreshold()); // threshold 값 검증
         assertEquals(true, savedAlert.isNotifyByEmail()); // notifyByEmail 값 검증
@@ -80,17 +80,16 @@ class AlertControllerTest {
     @DisplayName("POST /api/alerts/{id}")
     void testUpdateAlert() throws Exception {
         // given
-        AlertSetting saved = alertRepository.save(new AlertSetting("BTC", 10000, false));
 
-        // 업데이트 요청
-        AlertSetting request = new AlertSetting("ETH", 1000, true);
+        AlertSetting first = alertRepository.findAll().get(0); //BTC
+        AlertSetting request = new AlertSetting("DOGE", 1000, true);
 
         // when & then
-        mockMvc.perform(post("/api/alerts/" + saved.getId())
+        mockMvc.perform(post("/api/alerts/" + first.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.coin").value("ETH"))
+                .andExpect(jsonPath("$.coin").value("DOGE"))
                 .andExpect(jsonPath("$.threshold").value(1000))
                 .andExpect(jsonPath("$.notifyByEmail").value(true));
     }

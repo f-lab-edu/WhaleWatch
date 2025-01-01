@@ -36,13 +36,13 @@ public class PostControllerTest {
     @BeforeEach
     void setup() {
         postRepository.deleteAll(); // DB 초기화
+
+        postRepository.save(new Post("Title1", "Content1"));
     }
 
     @Test
     void testGetPosts() throws Exception {
         // given
-        Post p = new Post("Title1", "Content1");
-        postRepository.save(p);
 
         // when & then
         mockMvc.perform(get("/api/posts"))
@@ -66,19 +66,19 @@ public class PostControllerTest {
 
         // then
         List<Post> all = postRepository.findAll();
-        assertEquals(1, all.size());
-        assertEquals("New Title", all.get(0).getTitle());
-        assertEquals("New Content", all.get(0).getContent());
+        assertEquals(2, all.size());
+        assertEquals("New Title", all.get(1).getTitle());
+        assertEquals("New Content", all.get(1).getContent());
     }
 
     @Test
     void testUpdatePost() throws Exception {
         // given
-        Post saved = postRepository.save(new Post("Old Title", "Old Content"));
+        Post first = postRepository.findAll().get(0);
         Post updateRequest = new Post("Updated Title", "Updated Content");
 
         // when & then
-        mockMvc.perform(post("/api/posts/" + saved.getId())
+        mockMvc.perform(post("/api/posts/" + first.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
@@ -86,7 +86,7 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.content").value("Updated Content"));
 
         // DB 확인
-        Post updated = postRepository.findById(saved.getId()).get();
+        Post updated = postRepository.findById(first.getId()).get();
         assertEquals("Updated Title", updated.getTitle());
         assertEquals("Updated Content", updated.getContent());
     }
