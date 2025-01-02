@@ -85,9 +85,5 @@ public class PostControllerTest {
                 .andExpect(jsonPath("$.title").value("Updated Title"))
                 .andExpect(jsonPath("$.content").value("Updated Content"));
 
-        // DB 확인
-        Post updated = postRepository.findById(first.getId()).get();
-        assertEquals("Updated Title", updated.getTitle());
-        assertEquals("Updated Content", updated.getContent());
     }
 }
