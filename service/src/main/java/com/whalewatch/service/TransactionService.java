@@ -12,8 +12,6 @@ public class TransactionService {
 
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
-        transactionRepository.save(new Transaction("0xabc123","BTC",20000));
-        transactionRepository.save(new Transaction("0xabc123","ETH",15000));
     }
 
     public List<Transaction> getAllTransactions() {

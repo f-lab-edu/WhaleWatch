@@ -16,9 +16,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User loginUser(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public User loginUser(String email,String password) {
+        return userRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
     }
 
     public User getUserInfo(int id) {
