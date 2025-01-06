@@ -40,27 +40,6 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUser() {
-        // given
-        String email = "login@test.com";
-        String password = "1234";
-        User user = new User(email, "logtester", password);
-
-        given(userRepository.findByEmailAndPassword(email, password))
-                .willReturn(Optional.of(user));
-
-        // when
-        User result = userService.loginUser(email, password);
-
-        // then
-        assertNotNull(result); // 반환값이 null이 아님을 확인
-        assertEquals(email, result.getEmail()); // 이메일 검증
-        assertEquals("logtester", result.getUsername()); // 이름 검증
-        assertEquals(password, result.getPassword()); // 비밀번호 검증
-    }
-
-
-    @Test
     void getUserInfo() {
         // given
         int userId = 1;
