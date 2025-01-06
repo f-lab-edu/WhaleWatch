@@ -23,11 +23,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User loginUser(String email,String password) {
-        return userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-    }
-
     public User getUserInfo(int id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
