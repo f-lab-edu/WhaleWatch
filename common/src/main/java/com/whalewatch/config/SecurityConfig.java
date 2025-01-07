@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .and()
                 // URL별 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users", "/api/users/login", "/api/users/refresh").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 // JWT 필터 추가

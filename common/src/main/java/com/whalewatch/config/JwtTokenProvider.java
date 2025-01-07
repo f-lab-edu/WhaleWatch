@@ -14,10 +14,10 @@ public class JwtTokenProvider {
     private String secretKey;
 
     @Value("${jwt.access-token-validity-in-seconds}")
-    private long accessTokenValidity;  // 초 단위 (예: 600)
+    private long accessTokenValidity;
 
     @Value("${jwt.refresh-token-validity-in-seconds}")
-    private long refreshTokenValidity; // 초 단위 (예: 1209600)
+    private long refreshTokenValidity;
 
     public JwtTokenProvider() {
     }
@@ -50,8 +50,9 @@ public class JwtTokenProvider {
 
     // 토큰에서 Subject 추출
     public String getEmailFromToken(String token) {
-        return Jwts.parserBuilder().build()
+        return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -60,8 +61,9 @@ public class JwtTokenProvider {
     // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().build()
+            Jwts.parserBuilder()
                     .setSigningKey(secretKey)
+                    .build()
                     .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
