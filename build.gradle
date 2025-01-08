@@ -13,6 +13,10 @@ java {
     }
 }
 
+repositories {
+    mavenCentral()  // Maven Central 레포지토리에서 라이브러리 다운로드
+}
+
 subprojects {
     // 모든 서브프로젝트에 공통 적용할 설정
     apply plugin: 'java'
