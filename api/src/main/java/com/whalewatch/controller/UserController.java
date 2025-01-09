@@ -1,8 +1,10 @@
 package com.whalewatch.controller;
 
 import com.whalewatch.domain.User;
+import com.whalewatch.dto.TokenResponseDto;
 import com.whalewatch.dto.UserDto;
 import com.whalewatch.mapper.UserMapper;
+import com.whalewatch.service.JwtService;
 import com.whalewatch.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,11 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final JwtService jwtService;
     private final UserMapper userMapper;
 
-    public UserController(UserService userService,UserMapper userMapper) {
+    public UserController(UserService userService,
+                          UserMapper userMapper,
+                          JwtService jwtService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.jwtService = jwtService;
     }
 
     @PostMapping
@@ -25,14 +31,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public UserDto loginUser(@RequestBody UserDto userDto) {
-        User user = userService.loginUser(userDto.getEmail(),userDto.getPassword());
+    public TokenResponseDto loginUser(@RequestBody UserDto userDto) {
+        // JwtService로 로그인 + 토큰 발급
+        return jwtService.login(userDto.getEmail(),userDto.getPassword());
+    }
 
-        if (!user.getPassword().equals(userDto.getPassword())){
-            throw new RuntimeException("Invalid password");
-        }
-
-        return userMapper.toDto(user);
+    @PostMapping("/refresh")
+    public TokenResponseDto refreshToken(@RequestBody TokenResponseDto tokenDto){
+        return jwtService.refreshAccessToken(tokenDto.getRefreshToken());
     }
 
     @GetMapping("{id}")
