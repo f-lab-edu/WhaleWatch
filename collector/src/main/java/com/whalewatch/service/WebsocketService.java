@@ -41,7 +41,7 @@ public class WebsocketService {
 
             session = client.doHandshake(listener, headers, uri).get();
 
-            log.info("WebSocket connection: {}", uri);
+            log.info("WebSocket service : {}", uri);
         } catch (InterruptedException | ExecutionException e) {
             log.error("Failed to WebSocket connection", e);
         } catch (Exception ex) {

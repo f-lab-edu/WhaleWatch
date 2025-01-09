@@ -19,7 +19,7 @@ public class WebSocketListener extends AbstractWebSocketHandler {
     //연결
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("WebSocket Connected: {}", session.getRemoteAddress());
+        log.info("Listener Connected: {}", session.getRemoteAddress());
 
         String subscriptionJson = "[" +
                 "{\"ticket\":\"test\"}," +
