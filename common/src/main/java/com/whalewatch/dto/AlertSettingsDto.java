@@ -6,8 +6,6 @@ public class AlertSettingsDto {
     private int threshold;
     private boolean notifyByEmail;
 
-    public AlertSettingsDto() {}
-
     public AlertSettingsDto(int id,String coin, int threshold, boolean notifyByEmail) {
         this.id = id;
         this.coin = coin;

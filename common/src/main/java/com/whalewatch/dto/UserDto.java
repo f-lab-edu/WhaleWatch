@@ -6,8 +6,6 @@ public class UserDto {
     private String username;
     private String password;
 
-    public UserDto() {}
-
     public UserDto(int id,String email, String username, String password) {
         this.id = id;
         this.email = email;

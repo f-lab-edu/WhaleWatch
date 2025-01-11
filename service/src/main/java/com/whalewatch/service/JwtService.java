@@ -39,33 +39,15 @@ public class JwtService {
         String accessToken = tokenProvider.generateAccessToken(user.getEmail());
         String refreshToken = tokenProvider.generateRefreshToken(user.getEmail());
 
-        //기존 refreshToken 있으면 제거
-        jwtTokenRepository.deleteByEmail(user.getEmail());
-
-        // refreshToken 저장
-        JwtToken refreshTokenEntity = new JwtToken(
-                refreshToken,
-                user.getEmail(),
-                LocalDateTime.now().plusSeconds(1209600)
-        );
-        jwtTokenRepository.save(refreshTokenEntity);
 
         return new TokenResponseDto(accessToken, refreshToken);
     }
 
     public TokenResponseDto refreshAccessToken(String refreshToken) {
-        JwtToken stored = jwtTokenRepository.findByToken(refreshToken)
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
-
-        if (stored.getExpiry().isBefore(LocalDateTime.now())) {
-            jwtTokenRepository.delete(stored);
-            throw new RuntimeException("Token expired.");
-        }
 
         // RefreshToken 자체가 유효한지
         if (!tokenProvider.validateToken(refreshToken)) {
-            jwtTokenRepository.delete(stored);
-            throw new RuntimeException("Invalid token signature.");
+            throw new RuntimeException("Invalid or expired refresh token.");
         }
 
         // 새 Access Token 발급

@@ -6,8 +6,6 @@ public class TransactionDto {
     private String coin;
     private int amount;
 
-    public TransactionDto() {}
-
     public TransactionDto(int id, String hash, String coin, int amount) {
         this.id = id;
         this.hash = hash;
