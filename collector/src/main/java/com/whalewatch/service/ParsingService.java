@@ -27,8 +27,7 @@ public class ParsingService {
             TradeDto tradeDto = objectMapper.readValue(jsonMessage, TradeDto.class);
 
             // 필터링
-            boolean pass = filteringService.shouldAlert(tradeDto);
-            if (pass) {
+            if (filteringService.shouldAlert(tradeDto)) {
                 log.info("[ALERT] Coin={}, volume={} exceeded threshold => {}",
                         tradeDto.getCode(),
                         tradeDto.getTradeVolume(),
@@ -36,21 +35,8 @@ public class ParsingService {
             }
 
         } catch (Exception e) {
-            log.debug("Exception message: {}", jsonMessage, e);
+            log.error("Failed to parse JSON message: {}", jsonMessage, e);  // error 로그로 변경하여 더욱 눈에 띄게 함
         }
     }
-
-    @PostConstruct
-    public void testHandleMessage() {
-        // 애플리케이션 시작 시 가짜 데이터 처리 테스트
-        String sampleJson = "{\"type\":\"trade\",\"code\":\"KRW-BTC\","
-                + "\"trade_price\":50000.0,\"trade_volume\":1.0,"
-                + "\"ask_bid\":\"ASK\",\"change_price\":10.0,"
-                + "\"timestamp\":1620000000000,\"trade_timestamp\":1620000000000}";
-        log.info("Testing handleMessage with sample data...");
-        parsingMessage(sampleJson);
-    }
-
-
 
 }
