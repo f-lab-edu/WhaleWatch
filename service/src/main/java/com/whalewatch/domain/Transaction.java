@@ -10,44 +10,69 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String hash;
     private String coin;
-    private int amount;
+    private Double tradePrice;   // 체결 가격
+    private Double tradeVolume;  // 체결량
+    private String askBid;       // "ASK" or "BID"
+    private Long tradeTimestamp;
 
     protected Transaction() {
     }
 
-    public Transaction(String hash, String coin, int amount) {
-        this.hash = hash;
+    public Transaction(String coin, Double tradePrice,
+                       Double tradeVolume, String askBid, Long tradeTimestamp) {
         this.coin = coin;
-        this.amount = amount;
+        this.tradePrice = tradePrice;
+        this.tradeVolume = tradeVolume;
+        this.askBid = askBid;
+        this.tradeTimestamp = tradeTimestamp;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getHash() {
-        return hash;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCoin() {
         return coin;
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
     public void setCoin(String coin) {
         this.coin = coin;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public Double getTradePrice() {
+        return tradePrice;
+    }
+
+    public void setTradePrice(Double tradePrice) {
+        this.tradePrice = tradePrice;
+    }
+
+    public Double getTradeVolume() {
+        return tradeVolume;
+    }
+
+    public void setTradeVolume(Double tradeVolume) {
+        this.tradeVolume = tradeVolume;
+    }
+
+    public String getAskBid() {
+        return askBid;
+    }
+
+    public void setAskBid(String askBid) {
+        this.askBid = askBid;
+    }
+
+    public Long getTradeTimestamp() {
+        return tradeTimestamp;
+    }
+
+    public void setTradeTimestamp(Long tradeTimestamp) {
+        this.tradeTimestamp = tradeTimestamp;
     }
 }

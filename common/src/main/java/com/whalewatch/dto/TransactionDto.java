@@ -2,35 +2,68 @@ package com.whalewatch.dto;
 
 public class TransactionDto {
     private int id;
-    private String hash;
     private String coin;
-    private int amount;
+    private Double tradePrice;
+    private Double tradeVolume;
+    private String askBid;
+    private Long tradeTimestamp;
 
-    public TransactionDto(int id, String hash, String coin, int amount) {
+    public TransactionDto(int id, String coin,
+                          Double tradePrice, Double tradeVolume,
+                          String askBid, Long tradeTimestamp) {
         this.id = id;
-        this.hash = hash;
         this.coin = coin;
-        this.amount = amount;
+        this.tradePrice = tradePrice;
+        this.tradeVolume = tradeVolume;
+        this.askBid = askBid;
+        this.tradeTimestamp = tradeTimestamp;
     }
 
-    public int getId() { return id; }
-    public String getHash() { return hash; }
-    public String getCoin() { return coin; }
-    public int getAmount() { return amount; }
+    public int getId() {
+        return id;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public String getCoin() {
+        return coin;
     }
 
     public void setCoin(String coin) {
         this.coin = coin;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public Double getTradePrice() {
+        return tradePrice;
+    }
+
+    public void setTradePrice(Double tradePrice) {
+        this.tradePrice = tradePrice;
+    }
+
+    public Double getTradeVolume() {
+        return tradeVolume;
+    }
+
+    public void setTradeVolume(Double tradeVolume) {
+        this.tradeVolume = tradeVolume;
+    }
+
+    public String getAskBid() {
+        return askBid;
+    }
+
+    public void setAskBid(String askBid) {
+        this.askBid = askBid;
+    }
+
+    public Long getTradeTimestamp() {
+        return tradeTimestamp;
+    }
+
+    public void setTradeTimestamp(Long tradeTimestamp) {
+        this.tradeTimestamp = tradeTimestamp;
     }
 }

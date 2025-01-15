@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation project(':service')
+
     // SpringBoot , Websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
