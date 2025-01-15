@@ -10,6 +10,8 @@ public class AlertSetting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private Integer userId;
+
     private String coin;
     private int threshold;
     private boolean notifyByEmail;
@@ -48,5 +50,13 @@ public class AlertSetting {
 
     public void setNotifyByEmail(boolean notifyByEmail) {
         this.notifyByEmail = notifyByEmail;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

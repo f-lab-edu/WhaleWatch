@@ -35,7 +35,7 @@ public class ParsingService {
             }
 
         } catch (Exception e) {
-            log.error("Failed to parse JSON message: {}", jsonMessage, e);  // error 로그로 변경하여 더욱 눈에 띄게 함
+            log.error("Failed to parse JSON message: {}", jsonMessage, e);
         }
     }
 
