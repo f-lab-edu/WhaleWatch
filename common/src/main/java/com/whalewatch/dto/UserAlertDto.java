@@ -11,6 +11,16 @@ public class UserAlertDto {
     private Long tradeTimestamp;
     private LocalDateTime alertedAt;
 
+    public UserAlertDto(int id, Integer userId, String coin, Double tradePrice, Double tradeVolume, Long tradeTimestamp, LocalDateTime alertedAt) {
+        this.id = id;
+        this.userId = userId;
+        this.coin = coin;
+        this.tradePrice = tradePrice;
+        this.tradeVolume = tradeVolume;
+        this.tradeTimestamp = tradeTimestamp;
+        this.alertedAt = alertedAt;
+    }
+
     // getters, setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
