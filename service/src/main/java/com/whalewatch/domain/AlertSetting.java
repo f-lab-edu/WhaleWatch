@@ -13,12 +13,12 @@ public class AlertSetting {
     private Integer userId;
 
     private String coin;
-    private int threshold;
+    private double threshold;
     private boolean notifyByEmail;
 
     protected AlertSetting() {}
 
-    public AlertSetting(String coin, int threshold, boolean notifyByEmail) {
+    public AlertSetting(String coin, double threshold, boolean notifyByEmail) {
         this.coin = coin;
         this.threshold = threshold;
         this.notifyByEmail = notifyByEmail;
@@ -32,7 +32,7 @@ public class AlertSetting {
         return coin;
     }
 
-    public int getThreshold() {
+    public double getThreshold() {
         return threshold;
     }
 
@@ -44,7 +44,7 @@ public class AlertSetting {
         this.coin = coin;
     }
 
-    public void setThreshold(int threshold) {
+    public void setThreshold(double threshold) {
         this.threshold = threshold;
     }
 

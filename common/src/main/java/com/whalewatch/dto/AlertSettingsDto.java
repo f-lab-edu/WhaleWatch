@@ -3,10 +3,10 @@ package com.whalewatch.dto;
 public class AlertSettingsDto {
     private int id;
     private String coin;
-    private int threshold;
+    private double threshold;
     private boolean notifyByEmail;
 
-    public AlertSettingsDto(int id,String coin, int threshold, boolean notifyByEmail) {
+    public AlertSettingsDto(int id,String coin, double threshold, boolean notifyByEmail) {
         this.id = id;
         this.coin = coin;
         this.threshold = threshold;
@@ -25,7 +25,7 @@ public class AlertSettingsDto {
         return coin;
     }
 
-    public int getThreshold() {
+    public double getThreshold() {
         return threshold;
     }
 
