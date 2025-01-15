@@ -22,3 +22,7 @@ jwt:
   secret-key: "${JWT_SECRET_KEY}"
   access-token-validity-in-seconds: 600
   refresh-token-validity-in-seconds: 1209600
+
+logging:
+  level:
+    com.whalewatch.service: DEBUG
