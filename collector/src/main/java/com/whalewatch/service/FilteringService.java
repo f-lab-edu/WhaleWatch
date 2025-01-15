@@ -36,7 +36,7 @@ public class FilteringService {
         }
 
         if (dto.getTradeVolume() > threshold) {
-            log.info("[FilteringService] coin={}, volume={} > threshold({}) => Save DB",
+            log.info("[ADMIN] coin={}, volume={} > threshold({}) => Save DB",
                     dto.getCode(), dto.getTradeVolume(), threshold);
 
 
