@@ -1,6 +1,7 @@
 package com.whalewatch.service;
 
 import com.whalewatch.TradeDto;
+import com.whalewatch.domain.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,22 +15,42 @@ public class FilteringService {
     private static final Logger log = LoggerFactory.getLogger(ParsingService.class);
     private final Map<String, Double> volumeThresholdMap = new ConcurrentHashMap<>();
 
-    public FilteringService() {
-        // 테스트용 초기값 설정
+    private final TransactionService transactionService;
+
+    public FilteringService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+
+        // 초기값
         volumeThresholdMap.put("KRW-BTC", 0.2);
         volumeThresholdMap.put("KRW-ETH", 5.0);
     }
 
-    public double getVolumeThreshold(String coin) {
-        return volumeThresholdMap.get(coin);
-    }
-
-    public boolean shouldAlert(TradeDto dto) {
+    public void adminFiltering(TradeDto dto) {
         if (dto.getCode() == null || dto.getTradeVolume() == null) {
-            return false;
+            return;
         }
-        double threshold = getVolumeThreshold(dto.getCode());
-        return dto.getTradeVolume() > threshold;
+
+        Double threshold = volumeThresholdMap.get(dto.getCode());
+        if (threshold == null) {
+            return;
+        }
+
+        if (dto.getTradeVolume() > threshold) {
+            log.info("[ADMIN] coin={}, volume={} > threshold({}) => Save DB",
+                    dto.getCode(), dto.getTradeVolume(), threshold);
+
+
+            Transaction tx = new Transaction(
+                    dto.getCode(),
+                    dto.getTradePrice(),
+                    dto.getTradeVolume(),
+                    dto.getAskBid(),
+                    dto.getTradeTimestamp()
+            );
+
+            // createTransaction
+            transactionService.createTransaction(tx);
+        }
     }
 
 

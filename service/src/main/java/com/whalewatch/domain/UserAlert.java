@@ -1,22 +1,36 @@
-package com.whalewatch.dto;
+package com.whalewatch.domain;
 
-public class TransactionDto {
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "user_alert")
+public class UserAlert {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private Integer userId;
+
     private String coin;
     private Double tradePrice;
     private Double tradeVolume;
-    private String askBid;
     private Long tradeTimestamp;
 
-    public TransactionDto(int id, String coin,
-                          Double tradePrice, Double tradeVolume,
-                          String askBid, Long tradeTimestamp) {
-        this.id = id;
+    private LocalDateTime alertedAt;
+
+    protected UserAlert() {}
+
+    public UserAlert(Integer userId, String coin, Double tradePrice,
+                     Double tradeVolume, Long tradeTimestamp) {
+        this.userId = userId;
         this.coin = coin;
         this.tradePrice = tradePrice;
         this.tradeVolume = tradeVolume;
-        this.askBid = askBid;
         this.tradeTimestamp = tradeTimestamp;
+        this.alertedAt = LocalDateTime.now();
     }
 
     public int getId() {
@@ -25,6 +39,14 @@ public class TransactionDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getCoin() {
@@ -51,19 +73,19 @@ public class TransactionDto {
         this.tradeVolume = tradeVolume;
     }
 
-    public String getAskBid() {
-        return askBid;
-    }
-
-    public void setAskBid(String askBid) {
-        this.askBid = askBid;
-    }
-
     public Long getTradeTimestamp() {
         return tradeTimestamp;
     }
 
     public void setTradeTimestamp(Long tradeTimestamp) {
         this.tradeTimestamp = tradeTimestamp;
+    }
+
+    public LocalDateTime getAlertedAt() {
+        return alertedAt;
+    }
+
+    public void setAlertedAt(LocalDateTime alertedAt) {
+        this.alertedAt = alertedAt;
     }
 }
