@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: ${SPRING_DATASOURCE_URL}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     initialization-mode: always
   jpa:
     hibernate:
@@ -12,11 +12,6 @@ spring:
     generate-ddl: true
   main:
     web-application-type: servlet
-  # H2 콘솔 활성화 설정 (spring 하위로 이동)
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 jwt:
   secret-key: "${JWT_SECRET_KEY}"
