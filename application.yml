@@ -7,8 +7,8 @@ spring:
     initialization-mode: always
   jpa:
     hibernate:
-      ddl-auto: create
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
     generate-ddl: true
   main:
     web-application-type: servlet

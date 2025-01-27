@@ -21,8 +21,10 @@ public class FilteringService {
         this.transactionService = transactionService;
 
         // 초기값
-        volumeThresholdMap.put("KRW-BTC", 0.2);
-        volumeThresholdMap.put("KRW-ETH", 5.0);
+        volumeThresholdMap.put("KRW-BTC", 0.7);
+        volumeThresholdMap.put("KRW-ETH", 20.0);
+        volumeThresholdMap.put("KRW-SOL", 220.0);
+
     }
 
     public void adminFiltering(TradeDto dto) {

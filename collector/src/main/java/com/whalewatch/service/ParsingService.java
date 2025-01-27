@@ -14,13 +14,11 @@ public class ParsingService {
 
     private final ObjectMapper objectMapper;
     private final FilteringService filteringService;
-    private final UserFilteringService userFilteringService;
 
     public ParsingService(ObjectMapper objectMapper,
-                               FilteringService filteringService, UserFilteringService userFilteringService) {
+                               FilteringService filteringService) {
         this.objectMapper = objectMapper;
         this.filteringService = filteringService;
-        this.userFilteringService = userFilteringService;
     }
 
     public void parsingMessage(String jsonMessage) {
@@ -31,8 +29,6 @@ public class ParsingService {
             // 2) 관리자 필터링 로직 => Transaction DB 저장
             filteringService.adminFiltering(tradeDto);
 
-            // 3) 사용자 필터링 로직 => UserAlert(또는 로그) 저장
-            userFilteringService.userFiltering(tradeDto);
 
         } catch (Exception e) {
             log.error("Failed to parse JSON message: {}", jsonMessage, e);
