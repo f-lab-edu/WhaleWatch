@@ -5,12 +5,16 @@ import com.whalewatch.domain.Transaction;
 import com.whalewatch.domain.UserAlert;
 import com.whalewatch.repository.AlertRepository;
 import com.whalewatch.repository.TransactionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class TransactionService {
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
+
     private final TransactionRepository transactionRepository;
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
@@ -34,6 +38,9 @@ public class TransactionService {
     public Transaction createTransaction(Transaction tx) {
         Transaction savedTx = transactionRepository.save(tx);
 
+        // 트랜잭션 저장 후 시점
+        long startAlertTime = System.currentTimeMillis();
+
         // AlertSetting 조회
         List<AlertSetting> settings = alertRepository.findByCoin(savedTx.getCoin());
 
@@ -51,6 +58,11 @@ public class TransactionService {
                 userAlertService.createUserAlert(userAlert);
             }
         }
+        // Alert db 저장 후 시점
+        long endAlertTime = System.currentTimeMillis();
+
+        long alertInsertionTime = endAlertTime - startAlertTime;
+        log.info("Transaction save {}ms",alertInsertionTime);
         return savedTx;
     }
 
