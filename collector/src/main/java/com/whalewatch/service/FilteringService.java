@@ -20,9 +20,10 @@ public class FilteringService {
     public FilteringService(TransactionService transactionService) {
         this.transactionService = transactionService;
 
-        // 초기값
-        volumeThresholdMap.put("KRW-BTC", 0.2);
-        volumeThresholdMap.put("KRW-ETH", 5.0);
+        volumeThresholdMap.put("BTC", 0.5);
+        volumeThresholdMap.put("ETH", 15.0);
+        volumeThresholdMap.put("SOL", 90.0);
+
     }
 
     public void adminFiltering(TradeDto dto) {
@@ -36,8 +37,8 @@ public class FilteringService {
         }
 
         if (dto.getTradeVolume() > threshold) {
-            log.info("[ADMIN] coin={}, volume={} > threshold({}) => Save DB",
-                    dto.getCode(), dto.getTradeVolume(), threshold);
+            log.info("[ADMIN][{}] coin={}, volume={} > threshold({}) => Save DB",
+                    dto.getExchange(),dto.getCode(), dto.getTradeVolume(), threshold);
 
 
             Transaction tx = new Transaction(
@@ -48,7 +49,6 @@ public class FilteringService {
                     dto.getTradeTimestamp()
             );
 
-            // createTransaction
             transactionService.createTransaction(tx);
         }
     }

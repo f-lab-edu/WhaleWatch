@@ -25,6 +25,8 @@ public class TradeDto {
     @JsonProperty("trade_timestamp")
     private Long tradeTimestamp;
 
+    private String exchange;
+
     public String getType() {
         return type;
     }
@@ -90,6 +92,13 @@ public class TradeDto {
         this.tradeTimestamp = tradeTimestamp;
     }
 
+    public String getExchange() {
+        return exchange;
+    }
+    public void setExchange(String exchange) {
+        this.exchange = exchange;
+    }
+
     @Override
     public String toString() {
         return "TradeDto{" +
@@ -101,6 +110,7 @@ public class TradeDto {
                 ", changePrice=" + changePrice +
                 ", timestamp=" + timestamp +
                 ", tradeTimestamp=" + tradeTimestamp +
+                ", exchange='" + exchange + '\'' +
                 '}';
     }
 }

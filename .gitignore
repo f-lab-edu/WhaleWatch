@@ -13,3 +13,5 @@
 out/
 .idea/
 
+### env ###
+.env

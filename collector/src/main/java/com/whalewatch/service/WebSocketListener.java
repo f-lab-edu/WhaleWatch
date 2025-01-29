@@ -26,7 +26,7 @@ public class WebSocketListener extends BinaryWebSocketHandler {
 
         String subscriptionJson = "[" +
                 "{\"ticket\":\"test\"}," +
-                "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\"]}," +
+                "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\",\"KRW-SOL\"]}," +
                 "{\"format\":\"DEFAULT\"}" +
                 "]";
         session.sendMessage(new TextMessage(subscriptionJson));

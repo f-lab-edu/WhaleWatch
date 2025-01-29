@@ -26,6 +26,10 @@ subprojects {
         mavenCentral() // Maven Central에서 의존성 다운로드
     }
 
+    dependencies {
+        implementation 'mysql:mysql-connector-java:8.0.33'
+    }
+
 
     test {
         useJUnitPlatform() //JUnit 테스트 플랫폼 사용
@@ -35,6 +39,7 @@ subprojects {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 
