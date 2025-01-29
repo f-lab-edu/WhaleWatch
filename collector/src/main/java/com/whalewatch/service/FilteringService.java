@@ -20,9 +20,9 @@ public class FilteringService {
     public FilteringService(TransactionService transactionService) {
         this.transactionService = transactionService;
 
-        volumeThresholdMap.put("BTC", 0.5);
-        volumeThresholdMap.put("ETH", 15.0);
-        volumeThresholdMap.put("SOL", 90.0);
+        volumeThresholdMap.put("BTC", 0.8);
+        volumeThresholdMap.put("ETH", 22.0);
+        volumeThresholdMap.put("SOL", 300.0);
 
     }
 
