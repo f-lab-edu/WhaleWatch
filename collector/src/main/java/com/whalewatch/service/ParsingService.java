@@ -25,19 +25,13 @@ public class ParsingService {
     }
 
     // 웹소켓 수신 메시지를 파싱
-    public void parsingMessage(String jsonMessage) {
+    public void parsingMessage(String jsonMessage, String exchangeName) {
         try {
             JsonNode root = objectMapper.readTree(jsonMessage);
-            String exchange;
-            if (root.has("stream")) {
-                exchange = "binance";
-            } else {
-                exchange = "upbit";
-            }
-            TradeDto dto = parseDynamic(exchange, root);
+            TradeDto dto = parseDynamic(exchangeName.toLowerCase(), root);
             if (dto != null) {
                 dto.setCode(unifyCode(dto.getCode()));
-                dto.setExchange(exchange.toUpperCase());
+                dto.setExchange(exchangeName.toUpperCase());
                 filteringService.adminFiltering(dto);
             }
         } catch (Exception e) {
