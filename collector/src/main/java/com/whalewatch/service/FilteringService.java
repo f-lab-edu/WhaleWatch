@@ -7,9 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Service
 public class FilteringService {
 
@@ -29,7 +26,7 @@ public class FilteringService {
         String exchangeKey = dto.getExchange().toLowerCase();
         ExchangesProperties.ExchangeConfig config = exchangesProperties.getExchanges().get(exchangeKey);
         if (config == null) {
-            log.error("No config found for exchange: {}", dto.getExchange());
+            log.error("No config found : {}", dto.getExchange());
             return;
         }
         Double threshold = config.getThreshold().get(dto.getCode());
