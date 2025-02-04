@@ -7,12 +7,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.IOException;
 
 public class BinanceWebSocketListener extends TextWebSocketHandler {
 
     private static final Logger log = LoggerFactory.getLogger(BinanceWebSocketListener.class);
-
     private final ParsingService parsingService;
 
     public BinanceWebSocketListener(ParsingService parsingService) {
@@ -21,23 +19,22 @@ public class BinanceWebSocketListener extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("[Binance Listener] Connected : {}", session.getRemoteAddress());
+        log.info("[Binance Listener] Connected: {}", session.getRemoteAddress());
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
-
         try {
             parsingService.parsingMessage(payload);
         } catch (Exception e) {
-            log.error("[Binance Listener] parse error", e);
+            log.error("[Binance Listener] Parse error", e);
         }
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        log.error("[Binance Listener] Transport Error: ", exception);
+        log.error("[Binance Listener] Transport error: ", exception);
     }
 
     @Override

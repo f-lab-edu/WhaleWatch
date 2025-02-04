@@ -10,56 +10,44 @@ import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 import java.nio.charset.StandardCharsets;
 
-public class WebSocketListener extends BinaryWebSocketHandler {
-    private static final Logger log = LoggerFactory.getLogger(WebSocketListener.class);
-
+public class UpbitWebSocketListener extends BinaryWebSocketHandler {
+    private static final Logger log = LoggerFactory.getLogger(UpbitWebSocketListener.class);
     private final ParsingService parsingService;
 
-    public WebSocketListener(ParsingService parsingService) {
+    public UpbitWebSocketListener(ParsingService parsingService) {
         this.parsingService = parsingService;
     }
 
-    //연결
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("Listener Connected: {}", session.getRemoteAddress());
-
+        log.info("[Upbit Listener] Connected: {}", session.getRemoteAddress());
+        // Request 전송
         String subscriptionJson = "[" +
                 "{\"ticket\":\"test\"}," +
                 "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\",\"KRW-SOL\"]}," +
                 "{\"format\":\"DEFAULT\"}" +
                 "]";
         session.sendMessage(new TextMessage(subscriptionJson));
-        log.info("message: {}", subscriptionJson);
+        log.info("[Upbit Listener] Sent subscription message: {}", subscriptionJson);
     }
 
-    //메시지 수신
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        // Binary 데이터를 String으로 변환
         String payload = new String(message.getPayload().array(), StandardCharsets.UTF_8);
-
         try {
-            parsingService.parsingMessage(payload);  // JSON 변환 및 필터링
+            parsingService.parsingMessage(payload);
         } catch (Exception e) {
-            log.error("Error parsing WebSocket message: {}", payload, e);
+            log.error("[Upbit Listener] Error parsing message: {}", payload, e);
         }
     }
 
-    //에러 발생
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        log.error("Error: ", exception);
+        log.error("[Upbit Listener] Transport error: ", exception);
     }
 
-    //연결 종료
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("Closed Status: {}", status);
+        log.info("[Upbit Listener] Closed, status: {}", status);
     }
-
-
-
-
-
 }
