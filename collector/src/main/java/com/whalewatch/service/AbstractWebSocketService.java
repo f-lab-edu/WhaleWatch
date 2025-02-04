@@ -32,7 +32,6 @@ public abstract class AbstractWebSocketService {
         try {
             WebSocketClient client = new StandardWebSocketClient();
             WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-            headers.setSecWebSocketProtocol(Collections.singletonList("json"));
             URI uri = new URI(getUrl());
             session = client.doHandshake(getHandler(), headers, uri).get();
             log.info("[{}] WebSocket connected: {}", getExchangeName(), uri);

@@ -26,12 +26,12 @@ public class WebsocketService extends AbstractWebSocketService {
         boolean isBinary = "binary".equalsIgnoreCase(config.getWebsocketType());
 
         String subscriptionJson = null;
-        if (isBinary) {
-            subscriptionJson = "[" +
-                    "{\"ticket\":\"test\"}," +
-                    "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\",\"KRW-SOL\"]}," +
-                    "{\"format\":\"DEFAULT\"}" +
-                    "]";
+        if ("UPBIT".equalsIgnoreCase(exchangeName) || "BITHUMB".equalsIgnoreCase(exchangeName)) {
+            subscriptionJson = "["
+                    + "{\"ticket\":\"test example\"},"
+                    + "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\",\"KRW-SOL\"],\"isOnlyRealtime\":true},"
+                    + "{\"format\":\"DEFAULT\"}"
+                    + "]";
         }
 
         return new WebSocketListener(
