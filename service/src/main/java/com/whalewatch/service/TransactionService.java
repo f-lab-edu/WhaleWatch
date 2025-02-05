@@ -36,33 +36,10 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction tx) {
+        long start = System.currentTimeMillis();
         Transaction savedTx = transactionRepository.save(tx);
-
-        // 트랜잭션 저장 후 시점
-        long startAlertTime = System.currentTimeMillis();
-
-        // AlertSetting 조회
-        List<AlertSetting> settings = alertRepository.findByCoin(savedTx.getCoin());
-
-        //  임계값 비교
-        for (AlertSetting setting : settings) {
-            if (savedTx.getTradeVolume() >= setting.getThreshold()) {
-                // 임계값 초과 UserAlert 생성
-                UserAlert userAlert = new UserAlert(
-                        setting.getUserId(),
-                        savedTx.getCoin(),
-                        savedTx.getTradePrice(),
-                        savedTx.getTradeVolume(),
-                        savedTx.getTradeTimestamp()
-                );
-                userAlertService.createUserAlert(userAlert);
-            }
-        }
-        // Alert db 저장 후 시점
-        long endAlertTime = System.currentTimeMillis();
-
-        long alertInsertionTime = endAlertTime - startAlertTime;
-        log.info("Transaction save {}ms",alertInsertionTime);
+        long duration = System.currentTimeMillis() - start;
+        log.info("Alert savs {} ms", duration);
         return savedTx;
     }
 
