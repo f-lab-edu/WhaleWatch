@@ -56,3 +56,18 @@ exchanges:
         BTC: 0.8
         ETH: 22.0
         SOL: 300.0
+    bithumb:
+      enabled: true
+      websocketType: binary
+      url: "wss://ws-api.bithumb.com/websocket/v1"
+      mapping:
+        type: "type"
+        code: "code"
+        tradePrice: "trade_price"
+        tradeVolume: "trade_volume"
+        tradeTimestamp: "trade_timestamp"
+        askBid: "ask_bid"
+      threshold:
+        BTC: 0.8
+        ETH: 22.0
+        SOL: 300.0

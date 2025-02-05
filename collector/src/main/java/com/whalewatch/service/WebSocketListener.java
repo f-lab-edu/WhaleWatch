@@ -44,7 +44,7 @@ public class WebSocketListener extends AbstractWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         String payload = message.getPayload();
         try {
-            parsingService.parsingMessage(payload);
+            parsingService.parsingMessage(payload, exchangeName);
         } catch (Exception e) {
             log.error("[{} Listener] Parse error", exchangeName, e);
         }
@@ -55,7 +55,7 @@ public class WebSocketListener extends AbstractWebSocketHandler {
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         String payload = new String(message.getPayload().array(), StandardCharsets.UTF_8);
         try {
-            parsingService.parsingMessage(payload);
+            parsingService.parsingMessage(payload, exchangeName);
         } catch (Exception e) {
             log.error("[{} Listener] Error parsing message: {}", exchangeName, payload, e);
         }
