@@ -1,52 +1,57 @@
 package com.whalewatch.service;
 
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketHttpHeaders;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import com.whalewatch.ExchangesProperties;
+import org.springframework.web.socket.WebSocketHandler;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
-@Service
-public class WebsocketService {
-    private static final Logger log = LoggerFactory.getLogger(WebsocketService.class);
+public class WebsocketService extends AbstractWebSocketService {
 
-    private final ParsingService parsingService;
-    private WebSocketSession session;
+    private final String exchangeName;
+    private final ExchangesProperties.ExchangeConfig config;
 
-    public WebsocketService(ParsingService parsingService) {
-        this.parsingService = parsingService;
+    public WebsocketService(String exchangeName, ExchangesProperties.ExchangeConfig config, ParsingService parsingService) {
+        super(parsingService);
+        this.exchangeName = exchangeName.toUpperCase();
+        this.config = config;
     }
 
-    @PostConstruct
-    public void init() {
-        startConnection();
+    @Override
+    public String getExchangeName() {
+        return exchangeName;
     }
 
-    public void startConnection() {
-        try {
-            WebSocketClient client = new StandardWebSocketClient();
-            WebSocketListener listener = new WebSocketListener(parsingService);
-            WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+    @Override
+    public WebSocketHandler getHandler() {
+        boolean isBinary = "binary".equalsIgnoreCase(config.getWebsocketType());
 
-            headers.setSecWebSocketProtocol(Collections.singletonList("json"));
-
-            URI uri = new URI("wss://api.upbit.com/websocket/v1");
-
-            session = client.doHandshake(listener, headers, uri).get();
-
-            log.info("WebSocket service : {}", uri);
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Failed to WebSocket connection", e);
-        } catch (Exception ex) {
-            log.error("Unexpected error", ex);
+        String subscriptionJson = null;
+        if (isBinary) {
+            subscriptionJson = "[" +
+                    "{\"ticket\":\"test\"}," +
+                    "{\"type\":\"trade\",\"codes\":[\"KRW-BTC\",\"KRW-ETH\",\"KRW-SOL\"]}," +
+                    "{\"format\":\"DEFAULT\"}" +
+                    "]";
         }
+
+        return new WebSocketListener(
+                parsingService,
+                exchangeName,
+                isBinary,
+                subscriptionJson
+        );
     }
 
+    @Override
+    public String getUrl() {
+        return config.getUrl();
+    }
+
+    public Map<String, String> getMapping() {
+        return config.getMapping();
+    }
+
+    public Map<String, Double> getThreshold() {
+        return config.getThreshold();
+    }
 }
