@@ -46,7 +46,7 @@ public class UserController {
         return jwtService.refreshAccessToken(tokenDto.getRefreshToken());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/info/{id}")
     public UserDto getUserInfo(@PathVariable int id) {
         User user = userService.getUserInfo(id);
         return userMapper.toDto(user);

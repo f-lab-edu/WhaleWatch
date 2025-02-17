@@ -1,7 +1,9 @@
-package com.whalewatch.service;
+package com.whalewatch.telegram;
 
 import com.whalewatch.config.TelegramBotProperties;
 import com.whalewatch.domain.User;
+import com.whalewatch.service.UserService;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -56,7 +58,7 @@ public class TelegramUserBot extends TelegramLongPollingBot {
                     User newUser = new User(data.getEmail(), data.getUsername());
                     newUser.setTelegramChatId(chatId);
                     userService.registerUser(newUser);
-                    sendTextMessage(chatId, "Registration completed! You can now request an OTP to log in.");
+                    sendTextMessage(chatId, "Registration completed! You can request an OTP to log in.");
                     registrationDataMap.remove(chatId);
                 }
                 return;
@@ -74,6 +76,11 @@ public class TelegramUserBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+    }
+
+    @EventListener
+    public void handleTelegramMessageEvent(TelegramMessageEvent event) {
+        sendTextMessage(event.getChatId(), event.getMessage());
     }
 
     // 내부 대화 상태 저장 클래스

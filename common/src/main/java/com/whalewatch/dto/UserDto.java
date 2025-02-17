@@ -4,13 +4,11 @@ public class UserDto {
     private int id;
     private String email;
     private String username;
-    private String password;
 
-    public UserDto(int id,String email, String username, String password) {
+    public UserDto(int id,String email, String username) {
         this.id = id;
         this.email = email;
         this.username = username;
-        this.password = password;
     }
 
     public void setId(int id) {
@@ -25,10 +23,6 @@ public class UserDto {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -41,7 +35,4 @@ public class UserDto {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

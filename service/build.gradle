@@ -23,4 +23,8 @@ dependencies {
 
     //telegramBot
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
+
+    //JAXB
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
 }

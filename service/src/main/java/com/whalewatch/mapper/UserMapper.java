@@ -11,13 +11,11 @@ public interface UserMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "username", source = "username")
-    @Mapping(target = "password", source = "password")
     UserDto toDto(User entity);
 
     // DTO -> Entity
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", source = "email")
     @Mapping(target = "username", source = "username")
-    @Mapping(target = "password", source = "password")
     User toEntity(UserDto dto);
 }
