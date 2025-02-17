@@ -27,4 +27,7 @@ dependencies {
     //JAXB
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+
+    //Kafka 설정
+    implementation 'org.springframework.kafka:spring-kafka'
 }
