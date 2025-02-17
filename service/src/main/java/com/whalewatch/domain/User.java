@@ -13,6 +13,25 @@ public class User {
     private String username;
     private String password;
 
+    private Long telegramChatId;
+    private String otpHash;
+
+    public Long getTelegramChatId() {
+        return telegramChatId;
+    }
+
+    public void setTelegramChatId(Long telegramChatId) {
+        this.telegramChatId = telegramChatId;
+    }
+
+    public String getOtpHash() {
+        return otpHash;
+    }
+
+    public void setOtpHash(String otpHash) {
+        this.otpHash = otpHash;
+    }
+
     protected User() {}
 
     public User(String email, String username, String password) {

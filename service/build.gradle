@@ -20,4 +20,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //telegramBot
+    implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
 }
