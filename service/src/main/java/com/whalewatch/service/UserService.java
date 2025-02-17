@@ -20,8 +20,6 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        String hashed = passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashed);
         return userRepository.save(user);
     }
 
@@ -41,7 +39,7 @@ public class UserService {
 
         // 사용자의 telegramChatId가 존재하면 텔레그램으로 OTP 전송
         if (user.getTelegramChatId() != null) {
-            telegramUserBot.sendTextMessage(user.getTelegramChatId(), "로그인 OTP: " + otp);
+            telegramUserBot.sendTextMessage(user.getTelegramChatId(), "Your login OTP: " + otp);
         } else {
             throw new RuntimeException("User is not registered with Telegram");
         }

@@ -71,3 +71,8 @@ exchanges:
         BTC: 0.8
         ETH: 22.0
         SOL: 300.0
+
+telegram:
+  bot:
+    username: "${TELEGRAM_USERNAME}"
+    token: "${TELEGRAM_TOKEN}"
