@@ -8,6 +8,8 @@ import com.whalewatch.service.JwtService;
 import com.whalewatch.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -23,17 +25,20 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping
-    public UserDto registerUser(@RequestBody UserDto userDto) {
-        User entity = userMapper.toEntity(userDto);
-        User saved = userService.registerUser(entity);
-        return userMapper.toDto(saved);
-    }
 
     @PostMapping("/login")
-    public TokenResponseDto loginUser(@RequestBody UserDto userDto) {
-        // JwtService로 로그인 + 토큰 발급
-        return jwtService.login(userDto.getEmail(),userDto.getPassword());
+    public TokenResponseDto loginUser(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String otp = request.get("otp");
+        return jwtService.login(email, otp);
+    }
+
+    // 사용자의 이메일을 받아 OTP를 생성 후 텔레그램으로 전송
+    @PostMapping("/request-otp")
+    public String requestOtp(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        userService.requestLoginOtp(email);
+        return "OTP has been sent to Telegram.";
     }
 
     @PostMapping("/refresh")
@@ -41,7 +46,7 @@ public class UserController {
         return jwtService.refreshAccessToken(tokenDto.getRefreshToken());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/info/{id}")
     public UserDto getUserInfo(@PathVariable int id) {
         User user = userService.getUserInfo(id);
         return userMapper.toDto(user);

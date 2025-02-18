@@ -17,43 +17,34 @@ public class JwtService {
     private final JwtTokenRepository jwtTokenRepository;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     public JwtService(UserRepository userRepository,
-                       JwtTokenRepository jwtTokenRepository,
-                       JwtTokenProvider tokenProvider,
-                       PasswordEncoder passwordEncoder) {
+                      JwtTokenRepository jwtTokenRepository,
+                      JwtTokenProvider tokenProvider,
+                      PasswordEncoder passwordEncoder,
+                      UserService userService) {
         this.userRepository = userRepository;
         this.jwtTokenRepository = jwtTokenRepository;
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
-    public TokenResponseDto login(String email, String Password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-
-        if (!passwordEncoder.matches(Password, user.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
-
+    public TokenResponseDto login(String email, String otp) {
+        User user = userService.loginWithOtp(email, otp);
         String accessToken = tokenProvider.generateAccessToken(user.getEmail());
         String refreshToken = tokenProvider.generateRefreshToken(user.getEmail());
-
-
         return new TokenResponseDto(accessToken, refreshToken);
     }
 
     public TokenResponseDto refreshAccessToken(String refreshToken) {
-
-        // RefreshToken 자체가 유효한지
+        // RefreshToken 유효성 검사
         if (!tokenProvider.validateToken(refreshToken)) {
             throw new RuntimeException("Invalid or expired refresh token.");
         }
-
-        // 새 Access Token 발급
         String email = tokenProvider.getEmailFromToken(refreshToken);
         String newAccessToken = tokenProvider.generateAccessToken(email);
-
         return new TokenResponseDto(newAccessToken, refreshToken);
     }
 }

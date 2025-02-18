@@ -39,7 +39,7 @@ public class SecurityConfig {
                 // URL별 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/api/users", "/api/users/login").permitAll() // 회원가입 및 로그인 허용
+                        .requestMatchers("/api/users/request-otp", "/api/users/login").permitAll() // 회원가입 및 로그인 허용
                         .requestMatchers("/api/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
