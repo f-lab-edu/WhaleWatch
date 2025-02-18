@@ -32,6 +32,12 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Not found"));
     }
 
+    // Telegram 채팅 ID로 사용자 조회
+    public User findByTelegramChatId(Long chatId) {
+        return userRepository.findByTelegramChatId(chatId)
+                .orElseThrow(() -> new RuntimeException("User not found with chatId: " + chatId));
+    }
+
     // 이메일을 받아 OTP 생성 후, 해당 사용자의 otpHash 업데이트 및 텔레그램 메시지 전송 이벤트 발행
     public void requestLoginOtp(String email) {
         User user = userRepository.findByEmail(email)
