@@ -62,14 +62,16 @@ public class TelegramAlert {
                         event.getTradeVolume(),
                         event.getTradeTimestamp()
                 );
-                userAlertService.createUserAlert(userAlert);
-                log.info("User alert created for userId {} for coin {}", setting.getUserId(), event.getCoin());
+                UserAlert savedAlert = userAlertService.createUserAlert(userAlert);
+                log.info("User alert created for userId {} for coin {} with alertId {}",
+                        setting.getUserId(), event.getCoin(), savedAlert.getId());
 
                 // UserService를 통해 사용자의 Telegram Chat ID 조회 후 알림 전송
                 try {
                     Long chatId = userService.getUserInfo(setting.getUserId()).getTelegramChatId();
                     if (chatId != null) {
-                        String message = String.format("Alert: A trade of at least %.2f occurred for %s", event.getTradeVolume(), event.getCoin());
+                        String message = String.format("Alert ID [%d]: A trade of at least %.2f occurred for %s",
+                                savedAlert.getId(), event.getTradeVolume(), event.getCoin());
                         telegramUserBot.sendTextMessage(chatId, message);
                         log.info("Telegram alert sent to chatId {}: {}", chatId, message);
                     } else {
