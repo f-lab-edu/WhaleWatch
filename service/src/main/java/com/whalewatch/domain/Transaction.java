@@ -16,7 +16,7 @@ public class Transaction {
     private String askBid;       // "ASK" or "BID"
     private Long tradeTimestamp;
 
-    protected Transaction() {
+    public Transaction() {
     }
 
     public Transaction(String coin, Double tradePrice,
