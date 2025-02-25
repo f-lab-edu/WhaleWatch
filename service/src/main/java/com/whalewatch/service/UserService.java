@@ -3,9 +3,7 @@ package com.whalewatch.service;
 import com.whalewatch.domain.User;
 import com.whalewatch.repository.UserRepository;
 import com.whalewatch.telegram.TelegramMessageEvent;
-import com.whalewatch.telegram.TelegramUserBot;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

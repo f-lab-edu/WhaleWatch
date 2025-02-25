@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class TelegramBotProperties {
     private String username;
     private String token;
+    private String webhookUrl;
 
     public String getUsername() {
         return username;
@@ -20,5 +21,11 @@ public class TelegramBotProperties {
     }
     public void setToken(String token) {
         this.token = token;
+    }
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
     }
 }

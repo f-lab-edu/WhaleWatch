@@ -7,7 +7,8 @@ import com.whalewatch.service.AlertService;
 import com.whalewatch.service.UserService;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.bots.TelegramWebhookBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TelegramUserBot extends TelegramLongPollingBot {
+public class TelegramWebhookUserBot extends TelegramWebhookBot {
 
     private final UserService userService;
     private final AlertService alertService;
@@ -25,7 +26,7 @@ public class TelegramUserBot extends TelegramLongPollingBot {
     private Map<Long, RegistrationData> registrationDataMap = new HashMap<>();
     private Map<Long, ThresholdSettingData> thresholdDataMap = new HashMap<>();
 
-    public TelegramUserBot(UserService userService, AlertService alertService, TelegramBotProperties telegramBotProperties) {
+    public TelegramWebhookUserBot(UserService userService, AlertService alertService, TelegramBotProperties telegramBotProperties) {
         this.userService = userService;
         this.alertService = alertService;
         this.telegramBotProperties = telegramBotProperties;
@@ -42,16 +43,22 @@ public class TelegramUserBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public void onUpdateReceived(Update update) {
+    public String getBotPath() {
+        return "/telegram/webhook";
+    }
+
+
+    @Override
+    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            // set_threshold 명령어 처리
+            // /set_threshold 명령어 처리
             if (messageText.equalsIgnoreCase("/set_threshold")) {
                 thresholdDataMap.put(chatId, new ThresholdSettingData());
                 sendTextMessage(chatId, "Enter Coins (BTC, ETH, SOL):");
-                return;
+                return null;
             }
 
             // 임계값 설정 진행
@@ -62,11 +69,11 @@ public class TelegramUserBot extends TelegramLongPollingBot {
                     String coinInput = messageText.trim().toUpperCase();
                     if (!("BTC".equals(coinInput) || "ETH".equals(coinInput) || "SOL".equals(coinInput))) {
                         sendTextMessage(chatId, "Enter a valid coin (BTC, ETH, SOL):");
-                        return;
+                        return null;
                     }
                     data.setCoin(coinInput);
                     sendTextMessage(chatId, "Please enter a threshold:");
-                    return;
+                    return null;
                 }
                 // 임계값 입력 단계
                 else if (data.getThreshold() == null) {
@@ -75,26 +82,25 @@ public class TelegramUserBot extends TelegramLongPollingBot {
                         data.setThreshold(threshold);
 
                         User user = userService.findByTelegramChatId(chatId);
-
                         AlertSetting alertSetting = new AlertSetting(data.getCoin(), threshold, false);
                         alertSetting.setUserId(user.getId());
                         alertService.createAlert(alertSetting);
-                        sendTextMessage(chatId, "Threshold set: Coin:" + data.getCoin() + ", Threshold: " + threshold);
+                        sendTextMessage(chatId, "Threshold set: Coin: " + data.getCoin() + ", Threshold: " + threshold);
                     } catch (NumberFormatException e) {
                         sendTextMessage(chatId, "Enter the threshold again:");
-                        return;
+                        return null;
                     } finally {
                         thresholdDataMap.remove(chatId);
                     }
-                    return;
+                    return null;
                 }
             }
 
-            // start 명령어 처리
+            // /start 명령어 처리
             if (messageText.equalsIgnoreCase("/start")) {
                 registrationDataMap.put(chatId, new RegistrationData());
                 sendTextMessage(chatId, "Welcome! Please enter your email to sign up.");
-                return;
+                return null;
             }
 
             RegistrationData regData = registrationDataMap.get(chatId);
@@ -110,12 +116,12 @@ public class TelegramUserBot extends TelegramLongPollingBot {
                     sendTextMessage(chatId, "Registration completed! You can request an OTP to log in.");
                     registrationDataMap.remove(chatId);
                 }
-                return;
+                return null;
             }
-            // ----------------------------------
 
             sendTextMessage(chatId, "Unrecognized command. Please type /start to begin registration or /set_threshold to set alert threshold.");
         }
+        return null;
     }
 
     public void sendTextMessage(Long chatId, String text) {
@@ -129,12 +135,12 @@ public class TelegramUserBot extends TelegramLongPollingBot {
         }
     }
 
-    @EventListener
+    @org.springframework.context.event.EventListener
     public void handleTelegramMessageEvent(TelegramMessageEvent event) {
         sendTextMessage(event.getChatId(), event.getMessage());
     }
 
-    // 회원가입 설정용
+    // 회원가입용 데이터 클래스
     private static class RegistrationData {
         private String email;
         private String username;
@@ -145,22 +151,14 @@ public class TelegramUserBot extends TelegramLongPollingBot {
         public void setUsername(String username) { this.username = username; }
     }
 
-    //  임계값 설정용
+    // 임계값 설정용 데이터 클래스
     private static class ThresholdSettingData {
         private String coin;
         private Double threshold;
 
-        public String getCoin() {
-            return coin;
-        }
-        public void setCoin(String coin) {
-            this.coin = coin;
-        }
-        public Double getThreshold() {
-            return threshold;
-        }
-        public void setThreshold(Double threshold) {
-            this.threshold = threshold;
-        }
+        public String getCoin() { return coin; }
+        public void setCoin(String coin) { this.coin = coin; }
+        public Double getThreshold() { return threshold; }
+        public void setThreshold(Double threshold) { this.threshold = threshold; }
     }
 }
