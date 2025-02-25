@@ -2,7 +2,7 @@ package com.whalewatch.service;
 
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.repository.TransactionRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.whalewatch.transaction.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;

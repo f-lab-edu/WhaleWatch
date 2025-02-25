@@ -31,3 +31,7 @@ dependencies {
     //Kafka 설정
     implementation 'org.springframework.kafka:spring-kafka'
 }
+
+bootJar {
+    archiveFileName = 'whalewatch-service.jar'
+}

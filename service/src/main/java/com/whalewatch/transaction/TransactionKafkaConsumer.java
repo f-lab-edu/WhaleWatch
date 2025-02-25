@@ -1,4 +1,4 @@
-package com.whalewatch.service;
+package com.whalewatch.transaction;
 
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.dto.TransactionEventDto;

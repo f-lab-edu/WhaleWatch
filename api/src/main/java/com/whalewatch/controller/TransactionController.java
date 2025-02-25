@@ -3,7 +3,7 @@ package com.whalewatch.controller;
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.dto.TransactionDto;
 import com.whalewatch.mapper.TransactionMapper;
-import com.whalewatch.service.TransactionService;
+import com.whalewatch.transaction.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
