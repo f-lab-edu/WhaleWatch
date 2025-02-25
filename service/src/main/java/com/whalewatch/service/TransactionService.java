@@ -17,46 +17,34 @@ import java.util.List;
 public class TransactionService {
     private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
 
-    private final TransactionRepository transactionRepository;
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    private final String TRANSACTION_ALERT = "transaction_alert";
+    private final String TRANSACTION_EVENT = "transaction_event";
 
-    public TransactionService(TransactionRepository transactionRepository,
-                              AlertRepository alertRepository,
+    public TransactionService(AlertRepository alertRepository,
                               UserAlertService userAlertService,
                               KafkaTemplate<String, Object> kafkaTemplate) {
-        this.transactionRepository = transactionRepository;
         this.alertRepository = alertRepository;
         this.userAlertService = userAlertService;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
-    }
-
-    public Transaction getTransactionById(int id) {
-        return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found"));
-    }
 
     public Transaction createTransaction(Transaction tx) {
-        Transaction savedTx = transactionRepository.save(tx);
-
         TransactionEventDto event = new TransactionEventDto(
-                savedTx.getId(),
-                savedTx.getCoin(),
-                savedTx.getTradePrice(),
-                savedTx.getTradeVolume(),
-                savedTx.getAskBid(),
-                savedTx.getTradeTimestamp()
+                tx.getId(),
+                tx.getCoin(),
+                tx.getTradePrice(),
+                tx.getTradeVolume(),
+                tx.getAskBid(),
+                tx.getTradeTimestamp()
         );
 
-        kafkaTemplate.send(TRANSACTION_ALERT, event);
-        log.info("Kafka message sent for transaction id {}", savedTx.getId());
-        return savedTx;
+        kafkaTemplate.send(TRANSACTION_EVENT, event);
+        log.info("Kafka event sent for transaction id {}", tx.getId());
+        return tx;
     }
 
 }
