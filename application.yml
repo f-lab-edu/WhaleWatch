@@ -26,6 +26,9 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: com.whalewatch.dto,com.whalewatch.domain
+  redis:
+    host: localhost
+    port: 6379
 
 jwt:
   secret-key: "${JWT_SECRET_KEY}"
