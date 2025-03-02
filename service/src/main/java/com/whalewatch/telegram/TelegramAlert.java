@@ -36,7 +36,7 @@ public class TelegramAlert {
     }
 
     @KafkaListener(
-            topics = "transaction_alert",
+            topics = "transaction_event",
             groupId = "whalewatch_group",
             containerFactory = "kafkaListenerContainerFactory"
     )
