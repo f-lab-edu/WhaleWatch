@@ -1,4 +1,4 @@
-package com.whalewatch.service;
+package com.whalewatch.kafka;
 
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.dto.TransactionEventDto;
@@ -35,7 +35,6 @@ public class TransactionKafkaConsumer {
 
     private Transaction convertToTransaction(TransactionEventDto event) {
         Transaction tx = new Transaction();
-        tx.setId(event.getId());
         tx.setCoin(event.getCoin());
         tx.setTradePrice(event.getTradePrice());
         tx.setTradeVolume(event.getTradeVolume());

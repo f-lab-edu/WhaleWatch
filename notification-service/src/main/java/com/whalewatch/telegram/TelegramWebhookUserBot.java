@@ -1,10 +1,13 @@
 package com.whalewatch.telegram;
 
 import com.whalewatch.domain.AlertSetting;
+import com.whalewatch.dto.ThresholdEventDto;
+import com.whalewatch.dto.UserRegistrationEventDto;
 import com.whalewatch.redis.RedisStateService;
 import com.whalewatch.redis.RegistrationData;
 import com.whalewatch.redis.ThresholdSettingData;
 import com.whalewatch.service.*;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -16,19 +19,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class TelegramWebhookUserBot extends TelegramWebhookBot {
 
-    private final UserService userService;
-    private final AlertService alertService;
     private final TelegramBotProperties telegramBotProperties;
     private final RedisStateService redisStateService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public TelegramWebhookUserBot(UserService userService,
-                                  AlertService alertService,
-                                  TelegramBotProperties telegramBotProperties,
-                                  RedisStateService redisStateService) {
-        this.userService = userService;
-        this.alertService = alertService;
+    public TelegramWebhookUserBot(TelegramBotProperties telegramBotProperties,
+                                  RedisStateService redisStateService,
+                                  KafkaTemplate<String, Object> kafkaTemplate) {
         this.telegramBotProperties = telegramBotProperties;
         this.redisStateService = redisStateService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -55,37 +55,26 @@ public class TelegramWebhookUserBot extends TelegramWebhookBot {
         Long chatId = update.getMessage().getChatId();
 
         if (messageText.equalsIgnoreCase("/start")) {
-            // /start를 시작하면 모두 초기화
             redisStateService.deleteRegistrationData(chatId);
             redisStateService.deleteThresholdData(chatId);
 
-            try {
-                userService.findByTelegramChatId(chatId);
-                sendTextMessage(chatId, "You are already registered.");
-            } catch (RuntimeException e) {
-                RegistrationData regData = new RegistrationData();
-                redisStateService.saveRegistrationData(chatId, regData);
-                sendTextMessage(chatId, "Welcome! Please enter your email to sign up.");
-            }
+            RegistrationData regData = new RegistrationData();
+            redisStateService.saveRegistrationData(chatId, regData);
+            sendTextMessage(chatId, "Welcome! Please enter your email to sign up.");
+
             return null;
         } else if (messageText.equalsIgnoreCase("/set_threshold")) {
-            // /set_threshold 실행시 모두 초기화
             redisStateService.deleteRegistrationData(chatId);
             redisStateService.deleteThresholdData(chatId);
 
-            try {
-                // 등록된 사용자만 임계값 설정 가능
-                userService.findByTelegramChatId(chatId);
-                ThresholdSettingData thresholdData = new ThresholdSettingData();
-                redisStateService.saveThresholdData(chatId, thresholdData);
-                sendTextMessage(chatId, "Enter Coins (BTC, ETH, SOL):");
-            } catch (RuntimeException e) {
-                sendTextMessage(chatId, "Please register first using /start.");
-            }
+            // threshold 설정 진행
+            ThresholdSettingData thresholdData = new ThresholdSettingData();
+            redisStateService.saveThresholdData(chatId, thresholdData);
+            sendTextMessage(chatId, "Enter Coins (BTC, ETH, SOL):");
             return null;
         }
 
-        // 회원가입 먼저
+        // 회원가입
         RegistrationData regData = redisStateService.getRegistrationData(chatId);
         if (regData != null) {
             if (regData.getEmail() == null) {
@@ -94,10 +83,18 @@ public class TelegramWebhookUserBot extends TelegramWebhookBot {
                 sendTextMessage(chatId, "Email received. Now, please enter your username.");
             } else if (regData.getUsername() == null) {
                 regData.setUsername(messageText);
-                User newUser = new User(regData.getEmail(), regData.getUsername());
-                newUser.setTelegramChatId(chatId);
-                userService.registerUser(newUser);
-                sendTextMessage(chatId, "Registration completed! You can request an OTP to log in.");
+
+                // Kafka에 "user_registration_topic" 전송
+                // user-service가 이 이벤트를 받아 DB 저장
+                kafkaTemplate.send("user_registration_topic",
+                        new UserRegistrationEventDto(
+                                chatId,
+                                regData.getEmail(),
+                                regData.getUsername()
+                        )
+                );
+                sendTextMessage(chatId, "Registration request sent! Please wait for confirmation.");
+
                 redisStateService.deleteRegistrationData(chatId);
             }
             return null;
@@ -118,18 +115,18 @@ public class TelegramWebhookUserBot extends TelegramWebhookBot {
                 return null;
             } else if (thresholdData.getThreshold() == null) {
                 try {
-                    double threshold = Double.parseDouble(messageText);
-                    thresholdData.setThreshold(threshold);
-                    User user = userService.findByTelegramChatId(chatId);
-                    if (user == null) {
-                        sendTextMessage(chatId, "You must register first using /start before setting a threshold.");
-                        redisStateService.deleteThresholdData(chatId);
-                        return null;
-                    }
-                    AlertSetting alertSetting = new AlertSetting(thresholdData.getCoin(), threshold, false);
-                    alertSetting.setUserId(user.getId());
-                    alertService.createAlert(alertSetting);
-                    sendTextMessage(chatId, "Threshold set: Coin: " + thresholdData.getCoin() + ", Threshold: " + threshold);
+                    double thresholdVal = Double.parseDouble(messageText);
+                    thresholdData.setThreshold(thresholdVal);
+                    // threshold 설정 이벤트 발행
+                    // user-service가 수신해서 AlertSetting 생성
+                    kafkaTemplate.send("user_threshold_topic",
+                            new ThresholdEventDto(
+                                    chatId,
+                                    thresholdData.getCoin(),
+                                    thresholdVal
+                            )
+                    );
+                    sendTextMessage(chatId, "Threshold request sent! Please wait for confirmation.");
                 } catch (NumberFormatException e) {
                     sendTextMessage(chatId, "Enter the threshold again:");
                     return null;
@@ -158,8 +155,4 @@ public class TelegramWebhookUserBot extends TelegramWebhookBot {
         }
     }
 
-    @org.springframework.context.event.EventListener
-    public void handleTelegramMessageEvent(TelegramMessageEvent event) {
-        sendTextMessage(event.getChatId(), event.getMessage());
-    }
 }

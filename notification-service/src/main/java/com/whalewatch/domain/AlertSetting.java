@@ -12,11 +12,13 @@ public class AlertSetting {
 
     private Integer userId;
 
+    private Long chatId;
+
     private String coin;
     private double threshold;
     private boolean notifyByEmail;
 
-    protected AlertSetting() {}
+    public AlertSetting() {}
 
     public AlertSetting(String coin, double threshold, boolean notifyByEmail) {
         this.coin = coin;
@@ -58,5 +60,13 @@ public class AlertSetting {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 }

@@ -5,7 +5,6 @@ import com.whalewatch.domain.UserAlert;
 import com.whalewatch.dto.TransactionEventDto;
 import com.whalewatch.repository.AlertRepository;
 import com.whalewatch.service.UserAlertService;
-import com.whalewatch.service.UserService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +21,13 @@ public class TelegramAlert {
 
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
-    private final UserService userService;
     private final TelegramWebhookUserBot telegramWebhookUserBot;
 
     public TelegramAlert(AlertRepository alertRepository,
                          UserAlertService userAlertService,
-                         UserService userService,
                          TelegramWebhookUserBot telegramWebhookUserBot) {
         this.alertRepository = alertRepository;
         this.userAlertService = userAlertService;
-        this.userService = userService;
         this.telegramWebhookUserBot = telegramWebhookUserBot;
     }
 
@@ -54,31 +50,23 @@ public class TelegramAlert {
 
         for (AlertSetting setting : alertSettings) {
             if (event.getTradeVolume() >= setting.getThreshold()) {
-                // DB에 사용자 알림 기록 저장
-                UserAlert userAlert = new UserAlert(
-                        setting.getUserId(),
-                        event.getCoin(),
-                        event.getTradePrice(),
-                        event.getTradeVolume(),
-                        event.getTradeTimestamp()
+                // 사용자 알림 기록
+                UserAlert savedAlert = userAlertService.createUserAlert(
+                        new UserAlert(setting.getUserId(), event.getCoin(),
+                                event.getTradePrice(), event.getTradeVolume(),
+                                event.getTradeTimestamp())
                 );
-                UserAlert savedAlert = userAlertService.createUserAlert(userAlert);
-                log.info("User alert created for userId {} for coin {} with alertId {}",
-                        setting.getUserId(), event.getCoin(), savedAlert.getId());
+                log.info("User alert created for userId {} with alertId {}",
+                        setting.getUserId(), savedAlert.getId());
 
-                // UserService를 통해 사용자의 Telegram Chat ID 조회 후 알림 전송
-                try {
-                    Long chatId = userService.getUserInfo(setting.getUserId()).getTelegramChatId();
-                    if (chatId != null) {
-                        String message = String.format("Alert ID [%d]: A trade of at least %.2f occurred for %s",
-                                savedAlert.getId(), event.getTradeVolume(), event.getCoin());
-                        telegramWebhookUserBot.sendTextMessage(chatId, message);
-                        log.info("Telegram alert sent to chatId {}: {}", chatId, message);
-                    } else {
-                        log.warn("No Telegram chat ID for userId {}", setting.getUserId());
-                    }
-                } catch (Exception e) {
-                    log.error("Error sending Telegram alert for userId {}: {}", setting.getUserId(), e.getMessage());
+                Long chatId = setting.getChatId();
+                if (chatId != null) {
+                    String message = String.format("Alert ID [%d]: A trade of at least %.2f occurred for %s",
+                            savedAlert.getId(), event.getTradeVolume(), event.getCoin());
+                    telegramWebhookUserBot.sendTextMessage(chatId, message);
+                    log.info("Telegram alert sent to chatId {}: {}", chatId, message);
+                } else {
+                    log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getUserId());
                 }
             }
         }
