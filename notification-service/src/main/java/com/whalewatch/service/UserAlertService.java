@@ -22,7 +22,4 @@ public class UserAlertService {
         return userAlertRepository.findAll();
     }
 
-    public List<UserAlert> getAlertsByUserId(Integer userId) {
-        return userAlertRepository.findByUserId(userId);
-    }
 }

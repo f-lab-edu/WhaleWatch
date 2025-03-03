@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface UserAlertRepository extends JpaRepository<UserAlert, Integer> {
-    List<UserAlert> findByUserId(Integer userId);
 }

@@ -14,14 +14,12 @@ public class AlertSetting {
 
     private String coin;
     private double threshold;
-    private boolean notifyByEmail;
 
     public AlertSetting() {}
 
-    public AlertSetting(String coin, double threshold, boolean notifyByEmail) {
+    public AlertSetting(String coin, double threshold) {
         this.coin = coin;
         this.threshold = threshold;
-        this.notifyByEmail = notifyByEmail;
     }
 
     public int getId() {
@@ -36,20 +34,12 @@ public class AlertSetting {
         return threshold;
     }
 
-    public boolean isNotifyByEmail() {
-        return notifyByEmail;
-    }
-
     public void setCoin(String coin) {
         this.coin = coin;
     }
 
     public void setThreshold(double threshold) {
         this.threshold = threshold;
-    }
-
-    public void setNotifyByEmail(boolean notifyByEmail) {
-        this.notifyByEmail = notifyByEmail;
     }
 
     public Long getChatId() {

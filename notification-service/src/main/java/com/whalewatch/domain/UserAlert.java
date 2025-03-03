@@ -19,13 +19,23 @@ public class UserAlert {
 
     private LocalDateTime alertedAt;
 
+    private Long chatId;
+    private String askBid;
+
+
     protected UserAlert() {}
 
-    public UserAlert(String coin, Double tradePrice,
-                     Double tradeVolume, Long tradeTimestamp) {
+    public UserAlert(Long chatId,
+                     String coin,
+                     Double tradePrice,
+                     Double tradeVolume,
+                     String askBid,
+                     Long tradeTimestamp) {
+        this.chatId = chatId;
         this.coin = coin;
         this.tradePrice = tradePrice;
         this.tradeVolume = tradeVolume;
+        this.askBid = askBid;
         this.tradeTimestamp = tradeTimestamp;
         this.alertedAt = LocalDateTime.now();
     }
@@ -76,5 +86,21 @@ public class UserAlert {
 
     public void setAlertedAt(LocalDateTime alertedAt) {
         this.alertedAt = alertedAt;
+    }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getAskBid() {
+        return askBid;
+    }
+
+    public void setAskBid(String askBid) {
+        this.askBid = askBid;
     }
 }

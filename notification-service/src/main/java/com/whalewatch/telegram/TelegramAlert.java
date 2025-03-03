@@ -51,22 +51,30 @@ public class TelegramAlert {
         for (AlertSetting setting : alertSettings) {
             if (event.getTradeVolume() >= setting.getThreshold()) {
                 // 사용자 알림 기록
-                UserAlert savedAlert = userAlertService.createUserAlert(
-                        new UserAlert(setting.getUserId(), event.getCoin(),
-                                event.getTradePrice(), event.getTradeVolume(),
-                                event.getTradeTimestamp())
+                UserAlert userAlert = new UserAlert(
+                        setting.getChatId(),        // 알림 설정 테이블에 들어있는 chat_id
+                        event.getCoin(),
+                        event.getTradePrice(),
+                        event.getTradeVolume(),
+                        event.getAskBid(),          // 트랜잭션에서 넘어온 ask_bid
+                        event.getTradeTimestamp()
                 );
-                log.info("User alert created for userId {} with alertId {}",
-                        setting.getUserId(), savedAlert.getId());
+                UserAlert savedAlert = userAlertService.createUserAlert(userAlert);
+                log.info("User alert created (alertId={})", savedAlert.getId());
 
                 Long chatId = setting.getChatId();
                 if (chatId != null) {
-                    String message = String.format("Alert ID [%d]: A trade of at least %.2f occurred for %s",
-                            savedAlert.getId(), event.getTradeVolume(), event.getCoin());
+                    String message = String.format(
+                            "[Alert]: A trade of at least %.2f occurred for %s at price %.2f (askBid=%s)",
+                            event.getTradeVolume(),
+                            event.getCoin(),
+                            event.getTradePrice(),
+                            event.getAskBid()
+                    );
                     telegramWebhookUserBot.sendTextMessage(chatId, message);
                     log.info("Telegram alert sent to chatId {}: {}", chatId, message);
                 } else {
-                    log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getUserId());
+                    log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getChatId());
                 }
             }
         }
