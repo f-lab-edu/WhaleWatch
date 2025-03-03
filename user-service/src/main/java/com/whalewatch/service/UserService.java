@@ -1,9 +1,10 @@
 package com.whalewatch.service;
 
 import com.whalewatch.domain.User;
+import com.whalewatch.dto.UserOtpEventDto;
 import com.whalewatch.repository.UserRepository;
-import com.whalewatch.telegram.TelegramMessageEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +12,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationEventPublisher eventPublisher;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       ApplicationEventPublisher eventPublisher) {
+                       KafkaTemplate<String, Object> kafkaTemplate) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.eventPublisher = eventPublisher;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public User registerUser(User user) {
@@ -46,7 +47,8 @@ public class UserService {
         userRepository.save(user);
 
         if (user.getTelegramChatId() != null) {
-            eventPublisher.publishEvent(new TelegramMessageEvent(user.getTelegramChatId(), "Your login OTP: " + otp));
+            UserOtpEventDto event = new UserOtpEventDto(user.getTelegramChatId(), "Your login OTP: " + otp);
+            kafkaTemplate.send("user_otp_topic", event);
         } else {
             throw new RuntimeException("User is not registered with Telegram");
         }

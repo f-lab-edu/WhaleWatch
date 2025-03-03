@@ -1,17 +1,13 @@
 package com.whalewatch.telegram;
 
 
-import com.whalewatch.config.TelegramBotProperties;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
-import org.telegram.telegrambots.meta.generics.BotSession;
-import org.telegram.telegrambots.meta.generics.Webhook;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import org.telegram.telegrambots.updatesreceivers.DefaultWebhook;
 
 
 @Configuration
