@@ -1,6 +1,6 @@
 package com.whalewatch.service;
 
-import com.whalewatch.ExchangesProperties;
+import com.whalewatch.service.config.ExchangesProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

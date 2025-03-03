@@ -1,11 +1,10 @@
 package com.whalewatch.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import com.whalewatch.ExchangesProperties;
-import com.whalewatch.TradeDto;
+import com.whalewatch.service.config.ExchangesProperties;
+import com.whalewatch.service.dto.TradeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

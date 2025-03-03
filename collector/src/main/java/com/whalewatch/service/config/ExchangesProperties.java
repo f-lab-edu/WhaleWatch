@@ -1,4 +1,4 @@
-package com.whalewatch;
+package com.whalewatch.service.config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

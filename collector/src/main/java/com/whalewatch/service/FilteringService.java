@@ -1,7 +1,7 @@
 package com.whalewatch.service;
 
-import com.whalewatch.ExchangesProperties;
-import com.whalewatch.TradeDto;
+import com.whalewatch.service.config.ExchangesProperties;
+import com.whalewatch.service.dto.TradeDto;
 import com.whalewatch.domain.Transaction;
 import com.whalewatch.transaction.TransactionService;
 import org.slf4j.Logger;
