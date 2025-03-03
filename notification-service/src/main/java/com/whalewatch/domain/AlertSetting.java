@@ -10,8 +10,6 @@ public class AlertSetting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Integer userId;
-
     private Long chatId;
 
     private String coin;
@@ -52,14 +50,6 @@ public class AlertSetting {
 
     public void setNotifyByEmail(boolean notifyByEmail) {
         this.notifyByEmail = notifyByEmail;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Long getChatId() {
