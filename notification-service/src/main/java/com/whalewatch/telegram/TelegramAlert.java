@@ -33,7 +33,7 @@ public class TelegramAlert {
 
     @KafkaListener(
             topics = "transaction_event",
-            groupId = "whalewatch_group",
+            groupId = "whalewatch_alert",
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void consume(ConsumerRecord<String, TransactionEventDto> record, Acknowledgment ack) {
