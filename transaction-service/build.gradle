@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     implementation project(':common')
-    implementation project(':service')
 
     // Spring Boot, JPA
     implementation 'org.springframework.boot:spring-boot-starter-web'
