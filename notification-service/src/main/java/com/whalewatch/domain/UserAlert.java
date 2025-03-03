@@ -12,8 +12,6 @@ public class UserAlert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private Integer userId;
-
     private String coin;
     private Double tradePrice;
     private Double tradeVolume;
@@ -23,9 +21,8 @@ public class UserAlert {
 
     protected UserAlert() {}
 
-    public UserAlert(Integer userId, String coin, Double tradePrice,
+    public UserAlert(String coin, Double tradePrice,
                      Double tradeVolume, Long tradeTimestamp) {
-        this.userId = userId;
         this.coin = coin;
         this.tradePrice = tradePrice;
         this.tradeVolume = tradeVolume;
@@ -39,14 +36,6 @@ public class UserAlert {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getCoin() {

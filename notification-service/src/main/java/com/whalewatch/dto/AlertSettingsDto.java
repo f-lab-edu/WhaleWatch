@@ -2,14 +2,12 @@ package com.whalewatch.dto;
 
 public class AlertSettingsDto {
     private int id;
-    private Integer userId;
     private String coin;
     private double threshold;
     private boolean notifyByEmail;
 
-    public AlertSettingsDto(int id,String coin,int userid, double threshold, boolean notifyByEmail) {
+    public AlertSettingsDto(int id,String coin, double threshold, boolean notifyByEmail) {
         this.id = id;
-        this.userId = userid;
         this.coin = coin;
         this.threshold = threshold;
         this.notifyByEmail = notifyByEmail;
@@ -21,14 +19,6 @@ public class AlertSettingsDto {
 
     public int getId() {
         return id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public String getCoin() {
