@@ -1,4 +1,4 @@
-package com.whalewatch.config;
+package com.whalewatch.telegram;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

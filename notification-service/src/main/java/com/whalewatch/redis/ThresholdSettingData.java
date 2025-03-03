@@ -1,4 +1,4 @@
-package com.whalewatch.service;
+package com.whalewatch.redis;
 
 import java.io.Serializable;
 
