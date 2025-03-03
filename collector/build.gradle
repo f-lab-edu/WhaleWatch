@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation project(':common')
+
     // SpringBoot , Websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
@@ -17,6 +19,9 @@ dependencies {
 
     //JsonPath
     implementation 'com.jayway.jsonpath:json-path:2.9.0'
+
+    //Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 bootJar {
