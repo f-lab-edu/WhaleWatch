@@ -2,20 +2,19 @@ package com.whalewatch.mapper;
 
 import com.whalewatch.dto.PostDto;
 import com.whalewatch.domain.Post;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {CommentMapper.class})
 public interface PostMapper {
+
     // Entity -> DTO
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "title", source = "title")
-    @Mapping(target = "content", source = "content")
-    PostDto toDto(Post entity);
+    @Mapping(target = "comments", expression = "java(entity.getComments().stream().map(commentMapper::toDto).collect(Collectors.toList()))")
+    PostDto toDto(Post entity, @Context CommentMapper commentMapper);
 
     // DTO -> Entity
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "title", source = "title")
-    @Mapping(target = "content", source = "content")
+    @Mapping(target = "comments", ignore = true)
     Post toEntity(PostDto dto);
 }
