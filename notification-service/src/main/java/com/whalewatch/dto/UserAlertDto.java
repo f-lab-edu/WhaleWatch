@@ -4,16 +4,14 @@ import java.time.LocalDateTime;
 
 public class UserAlertDto {
     private int id;
-    private Integer userId;
     private String coin;
     private Double tradePrice;
     private Double tradeVolume;
     private Long tradeTimestamp;
     private LocalDateTime alertedAt;
 
-    public UserAlertDto(int id, Integer userId, String coin, Double tradePrice, Double tradeVolume, Long tradeTimestamp, LocalDateTime alertedAt) {
+    public UserAlertDto(int id,String coin, Double tradePrice, Double tradeVolume, Long tradeTimestamp, LocalDateTime alertedAt) {
         this.id = id;
-        this.userId = userId;
         this.coin = coin;
         this.tradePrice = tradePrice;
         this.tradeVolume = tradeVolume;
@@ -24,9 +22,6 @@ public class UserAlertDto {
     // getters, setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
 
     public String getCoin() { return coin; }
     public void setCoin(String coin) { this.coin = coin; }

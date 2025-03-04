@@ -26,7 +26,6 @@ public class AlertService {
         AlertSetting alert = alertRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
         alert.setCoin(updatedAlert.getCoin());
         alert.setThreshold(updatedAlert.getThreshold());
-        alert.setNotifyByEmail(updatedAlert.isNotifyByEmail());
         return alertRepository.save(alert);
     }
 

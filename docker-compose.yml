@@ -47,44 +47,6 @@ services:
     networks:
       - whale-net
 
-  collector:
-    image: whalewatch/collector:latest
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  # 도커 내부 통신
-      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
-      TELEGRAM_USERNAME: ${TELEGRAM_USERNAME}
-      TELEGRAM_WEBHOOKURL: ${TELEGRAM_WEBHOOKURL}
-    depends_on:
-      - zookeeper
-      - mysql
-      - kafka
-    networks:
-      - whale-net
-    volumes:
-      - ./application.yml:/config/application.yml
-
-  service:
-    image: whalewatch/service:latest
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  # 도커 내부 통신
-      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
-      TELEGRAM_USERNAME: ${TELEGRAM_USERNAME}
-      TELEGRAM_WEBHOOKURL: ${TELEGRAM_WEBHOOKURL}
-    depends_on:
-      - mysql
-      - kafka
-      - zookeeper
-    networks:
-      - whale-net
-    volumes:
-      - ./application.yml:/config/application.yml
-
 volumes:
   mysql_data:
 
