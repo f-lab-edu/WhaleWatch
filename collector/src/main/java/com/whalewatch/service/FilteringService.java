@@ -1,9 +1,9 @@
 package com.whalewatch.service;
 
-import com.whalewatch.ExchangesProperties;
-import com.whalewatch.TradeDto;
-import com.whalewatch.domain.Transaction;
-import com.whalewatch.transaction.TransactionService;
+import com.whalewatch.config.ExchangesProperties;
+import com.whalewatch.dto.TradeDto;
+import com.whalewatch.dto.TransactionEventDto;
+import com.whalewatch.kafka.TransactionProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 public class FilteringService {
 
     private static final Logger log = LoggerFactory.getLogger(FilteringService.class);
-    private final ExchangesProperties exchangesProperties;
-    private final TransactionService transactionService;
 
-    public FilteringService(TransactionService transactionService, ExchangesProperties exchangesProperties) {
-        this.transactionService = transactionService;
+    private final ExchangesProperties exchangesProperties;
+    private final TransactionProducer transactionProducer;
+
+    public FilteringService(ExchangesProperties exchangesProperties,
+                            TransactionProducer transactionProducer) {
         this.exchangesProperties = exchangesProperties;
+        this.transactionProducer = transactionProducer;
     }
 
     public void adminFiltering(TradeDto dto) {
@@ -37,14 +39,16 @@ public class FilteringService {
         if (dto.getTradeVolume() > threshold) {
             log.info("[ADMIN][{}] coin={}, volume={} > threshold({}) => Save DB",
                     dto.getExchange(), dto.getCode(), dto.getTradeVolume(), threshold);
-            Transaction tx = new Transaction(
+            TransactionEventDto eventDto = new TransactionEventDto(
+                    0,
                     dto.getCode(),
                     dto.getTradePrice(),
                     dto.getTradeVolume(),
                     dto.getAskBid(),
                     dto.getTradeTimestamp()
             );
-            transactionService.createTransaction(tx);
+
+            transactionProducer.sendTransactionEvent(eventDto);
         }
     }
 }

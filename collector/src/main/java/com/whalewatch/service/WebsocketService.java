@@ -1,6 +1,6 @@
 package com.whalewatch.service;
 
-import com.whalewatch.ExchangesProperties;
+import com.whalewatch.config.ExchangesProperties;
 import org.springframework.web.socket.WebSocketHandler;
 
 import java.util.Map;

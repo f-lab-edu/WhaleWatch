@@ -1,3 +1,2 @@
 rootProject.name = 'WhaleWatch'
-include 'common', 'api', 'service', 'collector'
-
+include 'common', 'collector', 'transaction-service', 'notification-service', 'user-service', 'post-service'

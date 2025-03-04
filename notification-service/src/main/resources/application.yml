@@ -1,0 +1,27 @@
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9093}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+telegram:
+  bot:
+    username: ${TELEGRAM_USERNAME}
+    token: ${TELEGRAM_TOKEN}
+    webhookUrl: ${TELEGRAM_WEBHOOKURL}
+
+logging:
+  level:
+    com.whalewatch.notificationservice: DEBUG
