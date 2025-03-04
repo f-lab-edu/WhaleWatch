@@ -23,20 +23,20 @@ public class TelegramAlert {
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
     private final UserService userService;
-    private final TelegramUserBot telegramUserBot;
+    private final TelegramWebhookUserBot telegramWebhookUserBot;
 
     public TelegramAlert(AlertRepository alertRepository,
                          UserAlertService userAlertService,
                          UserService userService,
-                         TelegramUserBot telegramUserBot) {
+                         TelegramWebhookUserBot telegramWebhookUserBot) {
         this.alertRepository = alertRepository;
         this.userAlertService = userAlertService;
         this.userService = userService;
-        this.telegramUserBot = telegramUserBot;
+        this.telegramWebhookUserBot = telegramWebhookUserBot;
     }
 
     @KafkaListener(
-            topics = "transaction_alert",
+            topics = "transaction_event",
             groupId = "whalewatch_group",
             containerFactory = "kafkaListenerContainerFactory"
     )
@@ -72,7 +72,7 @@ public class TelegramAlert {
                     if (chatId != null) {
                         String message = String.format("Alert ID [%d]: A trade of at least %.2f occurred for %s",
                                 savedAlert.getId(), event.getTradeVolume(), event.getCoin());
-                        telegramUserBot.sendTextMessage(chatId, message);
+                        telegramWebhookUserBot.sendTextMessage(chatId, message);
                         log.info("Telegram alert sent to chatId {}: {}", chatId, message);
                     } else {
                         log.warn("No Telegram chat ID for userId {}", setting.getUserId());

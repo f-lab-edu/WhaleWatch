@@ -1,11 +1,10 @@
-package com.whalewatch.service;
+package com.whalewatch.transaction;
 
-import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.domain.Transaction;
-import com.whalewatch.domain.UserAlert;
 import com.whalewatch.dto.TransactionEventDto;
 import com.whalewatch.repository.AlertRepository;
 import com.whalewatch.repository.TransactionRepository;
+import com.whalewatch.service.UserAlertService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -22,7 +21,7 @@ public class TransactionService {
     private final UserAlertService userAlertService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    private final String TRANSACTION_ALERT = "transaction_alert";
+    private final String TRANSACTION_EVENT = "transaction_event";
 
     public TransactionService(TransactionRepository transactionRepository,
                               AlertRepository alertRepository,
@@ -43,20 +42,17 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction tx) {
-        Transaction savedTx = transactionRepository.save(tx);
-
         TransactionEventDto event = new TransactionEventDto(
-                savedTx.getId(),
-                savedTx.getCoin(),
-                savedTx.getTradePrice(),
-                savedTx.getTradeVolume(),
-                savedTx.getAskBid(),
-                savedTx.getTradeTimestamp()
+                tx.getId(),
+                tx.getCoin(),
+                tx.getTradePrice(),
+                tx.getTradeVolume(),
+                tx.getAskBid(),
+                tx.getTradeTimestamp()
         );
-
-        kafkaTemplate.send(TRANSACTION_ALERT, event);
-        log.info("Kafka message sent for transaction id {}", savedTx.getId());
-        return savedTx;
+        kafkaTemplate.send(TRANSACTION_EVENT, event);
+        log.info("Kafka event sent for transaction id {}", tx.getId());
+        return tx;
     }
 
 }

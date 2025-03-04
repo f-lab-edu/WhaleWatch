@@ -20,3 +20,7 @@ dependencies {
     //JsonPath
     implementation 'com.jayway.jsonpath:json-path:2.9.0'
 }
+
+bootJar {
+    archiveFileName = 'whalewatch-collector.jar'
+}

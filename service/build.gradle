@@ -27,7 +27,15 @@ dependencies {
     //JAXB
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.1.1'
 
     //Kafka 설정
     implementation 'org.springframework.kafka:spring-kafka'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+bootJar {
+    archiveFileName = 'whalewatch-service.jar'
 }
