@@ -18,10 +18,16 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
+    private final KafkaProducerProperties kafkaProducerProperties;
+
+    public KafkaConsumerConfig(KafkaProducerProperties kafkaProducerProperties) {
+        this.kafkaProducerProperties = kafkaProducerProperties;
+    }
+
     @Bean
     public ConsumerFactory<String, TransactionEventDto> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProducerProperties.getBootstrapServers());
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "whalewatch_group");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);

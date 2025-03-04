@@ -25,5 +25,5 @@ dependencies {
 }
 
 bootJar {
-    archiveFileName = 'whalewatch-collector.jar'
+    mainClass.set('com.whalewatch.CollectorApplication')
 }

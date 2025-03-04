@@ -27,7 +27,7 @@ spring:
       properties:
         spring.json.trusted.packages: com.whalewatch.dto,com.whalewatch.domain
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
 jwt:
