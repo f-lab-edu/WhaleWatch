@@ -2,6 +2,7 @@ package com.whalewatch.controller;
 
 import com.whalewatch.domain.Post;
 import com.whalewatch.dto.PostDto;
+import com.whalewatch.mapper.CommentMapper;
 import com.whalewatch.mapper.PostMapper;
 import com.whalewatch.service.PostService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
