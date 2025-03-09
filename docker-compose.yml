@@ -56,7 +56,9 @@ services:
       - whale-net
 
   collector:
-    image: whalewatch/collector:latest
+    build:
+      context: ./collector
+      dockerfile: Dockerfile
     container_name: collector
     ports:
       - "8081:8081"
@@ -79,7 +81,9 @@ services:
       - whale-net
 
   user-service:
-    image: whalewatch/user-service:latest
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
     container_name: user-service
     ports:
       - "8082:8082"
@@ -99,7 +103,9 @@ services:
       - whale-net
 
   transaction-service:
-    image: whalewatch/transaction-service:latest
+    build:
+      context: ./transaction-service
+      dockerfile: Dockerfile
     ports:
       - "8083:8083"
     environment:
@@ -118,7 +124,9 @@ services:
       - whale-net
 
   notification-service:
-    image: whalewatch/notification-service:latest
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
     ports:
       - "8084:8084"
     environment:
@@ -140,7 +148,9 @@ services:
       - whale-net
 
   post-service:
-    image: whalewatch/post-service:latest
+    build:
+      context: ./post-service
+      dockerfile: Dockerfile
     container_name: post-service
     ports:
       - "8085:8085"
@@ -166,4 +176,3 @@ volumes:
 networks:
   whale-net:
     driver: bridge
-

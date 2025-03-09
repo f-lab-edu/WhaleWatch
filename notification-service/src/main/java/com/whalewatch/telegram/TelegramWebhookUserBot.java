@@ -1,6 +1,5 @@
 package com.whalewatch.telegram;
 
-import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.dto.ThresholdEventDto;
 import com.whalewatch.dto.UserRegistrationEventDto;
 import com.whalewatch.redis.RedisStateService;
@@ -151,8 +150,12 @@ public class TelegramWebhookUserBot extends TelegramWebhookBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(text);
+
+        log.info("Attempting to send message to chatId {}: {}", chatId, text);
+
         try {
             execute(message);
+            log.info("Message sent successfully to chatId {}.", chatId);
         } catch (TelegramApiException e) {
             log.error("Error sending message to chatId {}: {}", chatId, e.getMessage(), e);
             e.printStackTrace();
