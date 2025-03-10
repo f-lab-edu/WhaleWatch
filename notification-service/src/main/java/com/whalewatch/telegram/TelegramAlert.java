@@ -41,7 +41,8 @@ public class TelegramAlert {
         log.info("Received transaction event: {}", event);
 
         // 해당 코인의 AlertSetting을 조회
-        List<AlertSetting> alertSettings = alertRepository.findByCoin(event.getCoin());
+        List<AlertSetting> alertSettings = alertRepository.findByCoinAndThreshold(
+                event.getCoin(), event.getTradeVolume());
         if (alertSettings.isEmpty()) {
             log.info("No alert settings for coin: {}", event.getCoin());
             ack.acknowledge();
@@ -49,14 +50,13 @@ public class TelegramAlert {
         }
 
         for (AlertSetting setting : alertSettings) {
-            if (event.getTradeVolume() >= setting.getThreshold()) {
-                // 사용자 알림 기록
+
                 UserAlert userAlert = new UserAlert(
-                        setting.getChatId(),        // 알림 설정 테이블에 들어있는 chat_id
+                        setting.getChatId(),
                         event.getCoin(),
                         event.getTradePrice(),
                         event.getTradeVolume(),
-                        event.getAskBid(),          // 트랜잭션에서 넘어온 ask_bid
+                        event.getAskBid(),
                         event.getTradeTimestamp()
                 );
                 UserAlert savedAlert = userAlertService.createUserAlert(userAlert);
@@ -76,7 +76,7 @@ public class TelegramAlert {
                 } else {
                     log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getChatId());
                 }
-            }
+
         }
         ack.acknowledge();
     }
