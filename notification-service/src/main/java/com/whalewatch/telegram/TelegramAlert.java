@@ -41,7 +41,7 @@ public class TelegramAlert {
         log.info("Received transaction event: {}", event);
 
         // 해당 코인의 AlertSetting을 조회
-        List<AlertSetting> alertSettings = alertRepository.findByCoinAndThreshold(
+        List<AlertSetting> alertSettings = alertRepository.findByCoinAndThresholdLessThanEqual(
                 event.getCoin(), event.getTradeVolume());
         if (alertSettings.isEmpty()) {
             log.info("No alert settings for coin: {}", event.getCoin());
