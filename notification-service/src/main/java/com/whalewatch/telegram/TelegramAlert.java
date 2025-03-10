@@ -3,12 +3,14 @@ package com.whalewatch.telegram;
 import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.domain.UserAlert;
 import com.whalewatch.dto.TransactionEventDto;
+import com.whalewatch.dto.TelegramAlertMessage;
 import com.whalewatch.repository.AlertRepository;
 import com.whalewatch.service.UserAlertService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +23,15 @@ public class TelegramAlert {
 
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
-    private final TelegramWebhookUserBot telegramWebhookUserBot;
+    private final KafkaTemplate<String, TelegramAlertMessage> kafkaTemplate;
+
 
     public TelegramAlert(AlertRepository alertRepository,
                          UserAlertService userAlertService,
-                         TelegramWebhookUserBot telegramWebhookUserBot) {
+                         KafkaTemplate<String, TelegramAlertMessage> kafkaTemplate) {
         this.alertRepository = alertRepository;
         this.userAlertService = userAlertService;
-        this.telegramWebhookUserBot = telegramWebhookUserBot;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @KafkaListener(
@@ -71,7 +74,9 @@ public class TelegramAlert {
                             event.getTradePrice(),
                             event.getAskBid()
                     );
-                    telegramWebhookUserBot.sendTextMessage(chatId, message);
+
+                    TelegramAlertMessage alertMessage = new TelegramAlertMessage(chatId, message);
+                    kafkaTemplate.send("telegram_alert_request", alertMessage);
                     log.info("Telegram alert sent to chatId {}: {}", chatId, message);
                 } else {
                     log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getChatId());

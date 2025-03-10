@@ -1,5 +1,6 @@
 package com.whalewatch.kafka;
 
+import com.whalewatch.dto.TelegramAlertMessage;
 import com.whalewatch.telegram.TelegramWebhookUserBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

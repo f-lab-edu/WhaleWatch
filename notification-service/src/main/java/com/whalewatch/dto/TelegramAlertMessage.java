@@ -1,4 +1,4 @@
-package com.whalewatch.kafka;
+package com.whalewatch.dto;
 
 import java.io.Serializable;
 
