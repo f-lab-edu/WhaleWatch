@@ -3,12 +3,14 @@ package com.whalewatch.telegram;
 import com.whalewatch.domain.AlertSetting;
 import com.whalewatch.domain.UserAlert;
 import com.whalewatch.dto.TransactionEventDto;
+import com.whalewatch.dto.TelegramAlertMessage;
 import com.whalewatch.repository.AlertRepository;
 import com.whalewatch.service.UserAlertService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +23,15 @@ public class TelegramAlert {
 
     private final AlertRepository alertRepository;
     private final UserAlertService userAlertService;
-    private final TelegramWebhookUserBot telegramWebhookUserBot;
+    private final KafkaTemplate<String, TelegramAlertMessage> kafkaTemplate;
+
 
     public TelegramAlert(AlertRepository alertRepository,
                          UserAlertService userAlertService,
-                         TelegramWebhookUserBot telegramWebhookUserBot) {
+                         KafkaTemplate<String, TelegramAlertMessage> kafkaTemplate) {
         this.alertRepository = alertRepository;
         this.userAlertService = userAlertService;
-        this.telegramWebhookUserBot = telegramWebhookUserBot;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @KafkaListener(
@@ -41,7 +44,8 @@ public class TelegramAlert {
         log.info("Received transaction event: {}", event);
 
         // 해당 코인의 AlertSetting을 조회
-        List<AlertSetting> alertSettings = alertRepository.findByCoin(event.getCoin());
+        List<AlertSetting> alertSettings = alertRepository.findByCoinAndThresholdLessThanEqual(
+                event.getCoin(), event.getTradeVolume());
         if (alertSettings.isEmpty()) {
             log.info("No alert settings for coin: {}", event.getCoin());
             ack.acknowledge();
@@ -49,14 +53,13 @@ public class TelegramAlert {
         }
 
         for (AlertSetting setting : alertSettings) {
-            if (event.getTradeVolume() >= setting.getThreshold()) {
-                // 사용자 알림 기록
+
                 UserAlert userAlert = new UserAlert(
-                        setting.getChatId(),        // 알림 설정 테이블에 들어있는 chat_id
+                        setting.getChatId(),
                         event.getCoin(),
                         event.getTradePrice(),
                         event.getTradeVolume(),
-                        event.getAskBid(),          // 트랜잭션에서 넘어온 ask_bid
+                        event.getAskBid(),
                         event.getTradeTimestamp()
                 );
                 UserAlert savedAlert = userAlertService.createUserAlert(userAlert);
@@ -71,12 +74,14 @@ public class TelegramAlert {
                             event.getTradePrice(),
                             event.getAskBid()
                     );
-                    telegramWebhookUserBot.sendTextMessage(chatId, message);
+
+                    TelegramAlertMessage alertMessage = new TelegramAlertMessage(chatId, message);
+                    kafkaTemplate.send("telegram_alert_request", alertMessage);
                     log.info("Telegram alert sent to chatId {}: {}", chatId, message);
                 } else {
                     log.warn("AlertSetting {} has no chatId for userId {}", setting.getId(), setting.getChatId());
                 }
-            }
+
         }
         ack.acknowledge();
     }

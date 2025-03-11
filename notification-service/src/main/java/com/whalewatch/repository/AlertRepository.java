@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface AlertRepository extends JpaRepository<AlertSetting, Integer> {
     List<AlertSetting> findByCoin(String coin);
+
+    List<AlertSetting> findByCoinAndThresholdLessThanEqual(String coin, double tradeVolume);
+
 }
