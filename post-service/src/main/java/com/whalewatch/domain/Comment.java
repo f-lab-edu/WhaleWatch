@@ -3,44 +3,38 @@ package com.whalewatch.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "post")
-public class Post {
+@Table(name = "comment")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String title;
+
     private String content;
     private String username;
     private int recommendedCount;
-    private int viewCount;
     private LocalDateTime createdDate;
 
-    // 댓글 리스트 양방향 연관
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
 
-    protected Post() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Post(String title, String content, String username) {
-        this.title = title;
+    protected Comment() {}
+
+    public Comment(String content, String username, Post post) {
         this.content = content;
         this.username = username;
+        this.post = post;
         this.recommendedCount = 0;
-        this.viewCount = 0;
         this.createdDate = LocalDateTime.now();
     }
 
     // Getter/Setter
     public int getId() { return id; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
@@ -51,12 +45,9 @@ public class Post {
     public int getRecommendedCount() { return recommendedCount; }
     public void setRecommendedCount(int recommendedCount) { this.recommendedCount = recommendedCount; }
 
-    public int getViewCount() { return viewCount; }
-    public void setViewCount(int viewCount) { this.viewCount = viewCount; }
-
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
 
-    public List<Comment> getComments() { return comments; }
-    public void setComments(List<Comment> comments) { this.comments = comments; }
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
 }

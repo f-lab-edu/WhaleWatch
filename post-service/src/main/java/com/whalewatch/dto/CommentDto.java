@@ -1,38 +1,29 @@
 package com.whalewatch.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class PostDto {
+public class CommentDto {
     private int id;
-    private String title;
     private String content;
     private String username;
     private int recommendedCount;
-    private int viewCount;
     private LocalDateTime createdDate;
-    private List<CommentDto> comments;
+    private int postId;
 
-    public PostDto() {}
+    public CommentDto() {}
 
-    public PostDto(int id, String title, String content, String username, int recommendedCount,
-                   int viewCount, LocalDateTime createdDate, List<CommentDto> comments) {
+    public CommentDto(int id, String content, String username, int recommendedCount, LocalDateTime createdDate, int postId) {
         this.id = id;
-        this.title = title;
         this.content = content;
         this.username = username;
         this.recommendedCount = recommendedCount;
-        this.viewCount = viewCount;
         this.createdDate = createdDate;
-        this.comments = comments;
+        this.postId = postId;
     }
 
     // Getter/Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
@@ -43,12 +34,9 @@ public class PostDto {
     public int getRecommendedCount() { return recommendedCount; }
     public void setRecommendedCount(int recommendedCount) { this.recommendedCount = recommendedCount; }
 
-    public int getViewCount() { return viewCount; }
-    public void setViewCount(int viewCount) { this.viewCount = viewCount; }
-
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
 
-    public List<CommentDto> getComments() { return comments; }
-    public void setComments(List<CommentDto> comments) { this.comments = comments; }
+    public int getPostId() { return postId; }
+    public void setPostId(int postId) { this.postId = postId; }
 }
