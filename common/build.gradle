@@ -14,3 +14,10 @@ dependencies {
     // Redis (Spring Data Redis)
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}

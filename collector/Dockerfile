@@ -1,8 +1,8 @@
-# collector/Dockerfile
 FROM openjdk:17-slim
 
-COPY build/libs/whalewatch-collector.jar /app/collector.jar
+WORKDIR /app
+COPY build/libs/collector.jar /app/collector.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "/app/collector.jar"]

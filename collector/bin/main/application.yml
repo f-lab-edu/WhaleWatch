@@ -1,43 +1,19 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
-    driverClassName: com.mysql.cj.jdbc.Driver
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
-    initialization-mode: always
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    generate-ddl: true
-  flyway:
-    sqlMigrationSeparator: "//"
-  main:
-    web-application-type: servlet
+    driverClassName: com.mysql.cj.jdbc.Driver
+
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9093}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9093}
-      group-id: whalewatch_group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: com.whalewatch.dto,com.whalewatch.domain
-  redis:
-    host: ${SPRING_REDIS_HOST}
-    port: ${SPRING_REDIS_PORT}
 
-jwt:
-  secret-key: "${JWT_SECRET_KEY}"
-  access-token-validity-in-seconds: 600
-  refresh-token-validity-in-seconds: 1209600
-
-logging:
-  level:
-    com.whalewatch.service: DEBUG
 
 exchanges:
   exchanges:
@@ -87,8 +63,6 @@ exchanges:
         ETH: 22.0
         SOL: 300.0
 
-telegram:
-  bot:
-    username: "${TELEGRAM_USERNAME}"
-    token: "${TELEGRAM_TOKEN}"
-    webhookUrl: "${TELEGRAM_WEBHOOKURL}"
+logging:
+  level:
+    com.whalewatch: DEBUG

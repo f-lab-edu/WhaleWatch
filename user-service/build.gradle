@@ -35,3 +35,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootJar {
+    mainClass.set('com.whalewatch.UserServiceApplication')
+}
