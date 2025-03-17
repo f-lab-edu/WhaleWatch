@@ -4,6 +4,7 @@ package com.whalewatch.service;
 import com.whalewatch.domain.Post;
 import com.whalewatch.repository.PostRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,10 +26,12 @@ public class PostService {
     }
 
     // 게시글 조회 시 viewCount 증가
-    public Post incrementViewCount(int id) {
-        Post post = getPostById(id);
-        post.setViewCount(post.getViewCount() + 1);
-        return postRepository.save(post);
+    @Transactional
+    public void incrementViewCount(int id) {
+        int updatedRows = postRepository.incrementViewCount(id);
+        if (updatedRows == 0) {
+            throw new RuntimeException("Post not found with id: " + id);
+        }
     }
 
     public Post createPost(Post post) {
