@@ -12,7 +12,7 @@
 
 ## 시스템 아키텍처
 
-![대체 텍스트](https://github.com/austinhong22/studynote/issues/1#issuecomment-2817027001)
+![대체 텍스트](https://github.com/user-attachments/assets/585f4632-5ac2-4927-b34d-f2f7a6e74ca6)
 
 ### 주요 목표 및 특징
 
