@@ -3,9 +3,6 @@
 >
 > **사용자는 코인, 거래량 임계값 같은 정보를 입력하면 실시간으로 거래소에서 대규모 거래가 발생 시 텔레그램 봇을 통해 알림을 받게 됩니다.**
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/585f4632-5ac2-4927-b34d-f2f7a6e74ca6" alt="WhaleWatch 시스템 아키텍처" width="800"/>
-</p>
 
 ---
 
