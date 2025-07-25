@@ -19,7 +19,7 @@
 WhaleWatch는 마이크로서비스 아키텍처를 채택하여 각 서비스가 독립적으로 개발, 배포, 확장될 수 있도록 설계되었습니다. 이벤트 기반 아키텍처를 통해 시스템 컴포넌트 간 결합도를 낮추고, 실시간 데이터 처리를 가능하게 했습니다.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/d4975898-c36e-43bb-b8d2-f55cfb2afe77" alt="WhaleWatch 시스템 아키텍처" width="600"/>
+  <img src="https://github.com/user-attachments/assets/7676c365-cc1a-42cf-b193-cd6eaa941f13" alt="WhaleWatch 시스템 아키텍처" width="600"/>
 </p>
 
 ### 🔹 주요 목표 및 특징
