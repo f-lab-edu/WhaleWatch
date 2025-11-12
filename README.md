@@ -125,12 +125,6 @@ WhaleWatch
 │   │       ├── service        # 알림 생성 및 전송 로직
 │   │       ├── kafka          # 알림 이벤트 소비자
 │   │       └── repository     # 알림 이력 관리
-│── post-service               # 게시물 및 커뮤니티 서비스
-│   ├── src/main/java
-│   │   └── com/whalewatch
-│   │       ├── controller     # 게시물 API 엔드포인트
-│   │       ├── service        # 게시물 및 댓글 관리 로직
-│   │       └── repository     # 게시물 데이터 저장소
 │── common                     # 공통 유틸리티 및 모델
 │   ├── src/main/java
 │   │   └── com/whalewatch
@@ -148,7 +142,6 @@ WhaleWatch
 4. 중요 거래 감지 시 알림 이벤트 생성 및 Kafka로 전송
 5. **Notification Service**에서 알림 이벤트 소비 및 텔레그램 메시지 전송
 6. **User Service**를 통해 사용자별 알림 설정 및 권한 관리
-7. **Post Service**를 통해 커뮤니티 기능 제공 및 사용자 인사이트 공유
 
 ---
 
