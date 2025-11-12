@@ -147,27 +147,6 @@ services:
     networks:
       - whale-net
 
-  post-service:
-    build:
-      context: ./post-service
-      dockerfile: Dockerfile
-    container_name: post-service
-    ports:
-      - "8085:8085"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-    depends_on:
-      - mysql
-      - kafka
-      - zookeeper
-      - redis
-    networks:
-      - whale-net
 
 volumes:
   mysql_data:
