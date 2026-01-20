@@ -27,14 +27,14 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        
+
         // 안정성 강화 설정
         configProps.put(ProducerConfig.ACKS_CONFIG, "all"); // 모든 브로커 확인
         configProps.put(ProducerConfig.RETRIES_CONFIG, 3); // 재시도 횟수
         configProps.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000); // 재시도 간격 1초
         configProps.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // 멱등성 보장
         configProps.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1); // 순서 보장
-        
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
