@@ -92,6 +92,11 @@ export function handleSummary(data) {
     const successRequests = totalRequests - failedRequests;
     const successRate = (successRequests / totalRequests) * 100;
     
+    const avgDuration = data.metrics.http_req_duration.values.avg || 0;
+    const p95Duration = data.metrics.http_req_duration.values['p(95)'] || 0;
+    const p99Duration = data.metrics.http_req_duration.values['p(99)'] || 0;
+    const messageSuccessRate = data.metrics.message_send_success.values.rate || 0;
+    
     return {
         'stdout': `
 ========================================
@@ -102,11 +107,11 @@ Kafka 부하테스트 결과
 실패 요청: ${failedRequests}
 성공률: ${successRate.toFixed(2)}%
 
-평균 응답 시간: ${data.metrics.http_req_duration.values.avg.toFixed(2)}ms
-P95 응답 시간: ${data.metrics.http_req_duration.values['p(95)'].toFixed(2)}ms
-P99 응답 시간: ${data.metrics.http_req_duration.values['p(99)'].toFixed(2)}ms
+평균 응답 시간: ${avgDuration.toFixed(2)}ms
+P95 응답 시간: ${p95Duration.toFixed(2)}ms
+P99 응답 시간: ${p99Duration > 0 ? p99Duration.toFixed(2) : 'N/A'}ms
 
-메시지 전송 성공률: ${(data.metrics.message_send_success.values.rate * 100).toFixed(2)}%
+메시지 전송 성공률: ${(messageSuccessRate * 100).toFixed(2)}%
 ========================================
         `,
     };
