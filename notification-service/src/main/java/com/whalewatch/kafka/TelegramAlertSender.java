@@ -24,8 +24,28 @@ public class TelegramAlertSender {
             containerFactory = "kafkaListenerContainerFactory"
     )
     public void sendTelegramAlert(TelegramAlertMessage message, Acknowledgment ack) {
-        telegramWebhookUserBot.sendTextMessage(message.getChatId(), message.getMessage());
-        log.info("Telegram alert sent to chatId {}: {}", message.getChatId(), message.getMessage());
-        ack.acknowledge();
+        log.info("[TelegramAlertSender] Received: chatId={}", message.getChatId());
+        
+        try {
+            // 유효성 검증
+            if (message == null || message.getChatId() == null) {
+                throw new IllegalArgumentException("Invalid message: chatId is required");
+            }
+            
+            telegramWebhookUserBot.sendTextMessage(message.getChatId(), message.getMessage());
+            log.info("[TelegramAlertSender] Success: chatId={}", message.getChatId());
+            ack.acknowledge();
+            
+        } catch (IllegalArgumentException e) {
+            // 유효성 오류 - DLQ로 전송
+            log.error("[TelegramAlertSender] Validation error - sending to DLQ: {}", e.getMessage());
+            throw e;
+            
+        } catch (Exception e) {
+            // 네트워크/API 오류 - 재시도
+            log.error("[TelegramAlertSender] Send error - will retry: chatId={}, error={}",
+                    message.getChatId(), e.getMessage());
+            throw new RuntimeException("Failed to send telegram message", e);
+        }
     }
 }
